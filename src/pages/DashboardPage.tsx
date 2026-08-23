@@ -114,7 +114,7 @@ const DashboardPage = () => {
 
           <Card className="shadow-card">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">In Maintenance</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Out For Maintenance</CardTitle>
               <CheckCircle className="h-4 w-4 text-accent" />
             </CardHeader>
             <CardContent>
