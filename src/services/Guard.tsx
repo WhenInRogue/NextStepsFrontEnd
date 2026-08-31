@@ -15,6 +15,16 @@ export const ProtectedRoute = ({ element }: RouteProps) => {
   );
 };
 
+// Protects authenticated routes
+export const DreamTeamLeaderRoute = ({ element }: RouteProps) => {
+  const location = useLocation();
+  return ApiService.isAuthenticated() ? (
+    element
+  ) : (
+    <Navigate to="/login" replace state={{ from: location }} />
+  );
+};
+
 // Protects admin routes
 export const AdminRoute = ({ element }: RouteProps) => {
   const location = useLocation();

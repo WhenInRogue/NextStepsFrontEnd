@@ -23,7 +23,7 @@ const LoginPage = () => {
         ApiService.saveToken(res.token);
         ApiService.saveRole(res.role);
         toast({ title: "Welcome back!", description: res.message });
-        navigate("/dashboard");
+        navigate("/profile");
       }
     } catch (error: any) {
       toast({

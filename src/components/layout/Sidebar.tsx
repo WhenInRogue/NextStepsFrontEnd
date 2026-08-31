@@ -2,14 +2,6 @@ import { Link, useLocation } from "react-router-dom";
 import ApiService from "@/services/ApiService";
 import { 
   LayoutDashboard, 
-  ClipboardList, 
-  Package, 
-  Download, 
-  Upload, 
-  Wrench,
-  FileText,
-  Settings,
-  AlertCircle,
   LogOut,
   Leaf,
   User
@@ -28,14 +20,8 @@ const Sidebar = () => {
 
   const navItems = [
     { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard, show: isAuth },
-    { path: "/supply", label: "Supplies", icon: Package, show: isAdmin },
-    { path: "/checkInSupply", label: "Check-In/Out", icon: Download, show: isAuth },
-    { path: "/equipment", label: "Equipment", icon: Wrench, show: isAdmin },
-    { path: "/supplyTransactions", label: "Supply Usage", icon: ClipboardList, show: isAuth },
-    { path: "/equipmentTransactions", label: "Equipment Usage", icon: FileText, show: isAuth },
-    { path: "/maintenanceRecords", label: "Maintenance", icon: Settings, show: isAdmin },
     { path: "/profile", label: "Profile", icon: User, show: isAuth },
-    { path: "/register", label: "Register User", icon: User, show: isAdmin },
+    { path: "/register", label: "Register User", icon: User, show: isAdmin }
   ];
 
   return (
