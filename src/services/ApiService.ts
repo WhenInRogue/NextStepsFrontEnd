@@ -1,5 +1,6 @@
 import axios from "axios";
 import CryptoJS from "crypto-js";
+import type { GroupPayload } from "@/types/group";
 
 export default class ApiService {
   static BASE_URL = "http://localhost:5050/api";
@@ -114,6 +115,60 @@ export default class ApiService {
     return response.data;
   }
 
+  /** GROUPS API */
+  static async createGroup(groupData: GroupPayload) {
+    const response = await axios.post(`${this.BASE_URL}/groups/add`, groupData, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async getAllGroups() {
+    const response = await axios.get(`${this.BASE_URL}/groups/all`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async getGroupById(groupId: string | number) {
+    const response = await axios.get(`${this.BASE_URL}/groups/${groupId}`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async updateGroup(groupId: string | number, groupData: GroupPayload) {
+    const response = await axios.put(
+      `${this.BASE_URL}/groups/update/${groupId}`,
+      groupData,
+      {
+        headers: this.getHeader(),
+      }
+    );
+    return response.data;
+  }
+
+  static async deleteGroup(groupId: string | number) {
+    const response = await axios.delete(
+      `${this.BASE_URL}/groups/delete/${groupId}`,
+      {
+        headers: this.getHeader(),
+      }
+    );
+    return response.data;
+  }
+
+  static getErrorMessage(error: unknown, fallback = "Something went wrong"): string {
+    const err = error as { response?: { data?: { message?: string } } };
+    if (!err?.response) {
+      return `Couldn’t reach the NextSteps API at ${this.BASE_URL.replace(/\/api$/, "")}. Make sure the backend is running.`;
+    }
+    return err.response?.data?.message || fallback;
+  }
+
+  static getErrorStatus(error: unknown): number | undefined {
+    return (error as { response?: { status?: number } })?.response?.status;
+  }
 
   /** AUTHENTICATION CHECKER */
   static logout(): void {

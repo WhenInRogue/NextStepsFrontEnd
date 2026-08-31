@@ -31,8 +31,14 @@ const Header = () => {
 
   const links = [
     { path: "/profile", label: "Profile", show: true },
+    { path: "/groups", label: "Groups", show: true },
     { path: "/register", label: "Register", show: isAdmin },
   ];
+
+  const isCurrent = (path: string) =>
+    path === "/groups"
+      ? location.pathname === "/groups" || location.pathname.startsWith("/groups/")
+      : location.pathname === path;
 
   const initial = (name || "N").trim().charAt(0).toUpperCase();
 
@@ -50,7 +56,7 @@ const Header = () => {
                   to={item.path}
                   className={cn(
                     "text-sm text-ink/70 transition-colors hover:text-ink",
-                    location.pathname === item.path && "font-medium text-ink",
+                    isCurrent(item.path) && "font-medium text-ink",
                   )}
                 >
                   {item.label}
@@ -60,7 +66,7 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center justify-end gap-4">
-          <nav className="flex items-center gap-4 md:hidden">
+          <nav className="flex items-center gap-4 overflow-x-auto md:hidden">
             {links.map(
               (item) =>
                 item.show && (
@@ -69,7 +75,7 @@ const Header = () => {
                     to={item.path}
                     className={cn(
                       "text-sm text-ink/70",
-                      location.pathname === item.path && "font-medium text-ink",
+                      isCurrent(item.path) && "font-medium text-ink",
                     )}
                   >
                     {item.label}

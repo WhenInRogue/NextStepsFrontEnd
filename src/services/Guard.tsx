@@ -28,9 +28,7 @@ export const DreamTeamLeaderRoute = ({ element }: RouteProps) => {
 // Protects admin routes
 export const AdminRoute = ({ element }: RouteProps) => {
   const location = useLocation();
-  return ApiService.isAdmin() ? (
-    element
-  ) : (
-    <Navigate to="/login" replace state={{ from: location }} />
-  );
+  if (ApiService.isAdmin()) return element;
+  if (ApiService.isAuthenticated()) return <Navigate to="/groups" replace />;
+  return <Navigate to="/login" replace state={{ from: location }} />;
 };

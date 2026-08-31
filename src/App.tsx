@@ -7,6 +7,9 @@ import { ProtectedRoute, AdminRoute } from "./services/Guard";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage";
+import GroupsPage from "./pages/GroupsPage";
+import GroupDetailPage from "./pages/GroupDetailPage";
+import GroupFormPage from "./pages/GroupFormPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +25,10 @@ const App = () => (
           <Route path="/register" element={<AdminRoute element={<RegisterPage />} />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/profile" element={<ProtectedRoute element={<ProfilePage />} />} />
+          <Route path="/groups" element={<ProtectedRoute element={<GroupsPage />} />} />
+          <Route path="/groups/new" element={<AdminRoute element={<GroupFormPage />} />} />
+          <Route path="/groups/:id" element={<ProtectedRoute element={<GroupDetailPage />} />} />
+          <Route path="/groups/:id/edit" element={<AdminRoute element={<GroupFormPage />} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
