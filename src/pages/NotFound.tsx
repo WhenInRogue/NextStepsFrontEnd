@@ -1,30 +1,34 @@
 import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
-import { Leaf, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import BrandMark from "@/components/brand/BrandMark";
+import CoastalScene from "@/components/brand/CoastalScene";
+import ApiService from "@/services/ApiService";
 
 const NotFound = () => {
   const location = useLocation();
+  const home = ApiService.isAuthenticated() ? "/profile" : "/login";
 
   useEffect(() => {
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-secondary to-background p-4">
-      <div className="text-center space-y-6 animate-slide-up">
-        <div className="mx-auto w-20 h-20 rounded-2xl gradient-primary flex items-center justify-center shadow-glow">
-          <Leaf className="w-10 h-10 text-primary-foreground" />
+    <div className="grid min-h-screen bg-background lg:grid-cols-2">
+      <section className="relative hidden overflow-hidden lg:block">
+        <CoastalScene className="absolute inset-0 h-full w-full" />
+      </section>
+      <section className="flex items-center justify-center px-6 py-16">
+        <div className="w-full max-w-md animate-rise">
+          <BrandMark to={home} />
+          <p className="mt-12 text-[11px] font-medium uppercase tracking-[0.2em] text-terra">Lost at sea</p>
+          <h1 className="mt-3 font-serif text-6xl font-semibold text-ink">404</h1>
+          <p className="mt-4 text-ink/70">This page drifted off the map.</p>
+          <Button asChild className="mt-8 h-12 px-8 text-lg">
+            <Link to={home}>Return</Link>
+          </Button>
         </div>
-        <h1 className="text-6xl font-bold text-primary">404</h1>
-        <p className="text-xl text-muted-foreground">Oops! Page not found</p>
-        <Button asChild>
-          <Link to="/dashboard">
-            <Home className="w-4 h-4 mr-2" />
-            Return to Dashboard
-          </Link>
-        </Button>
-      </div>
+      </section>
     </div>
   );
 };

@@ -2,10 +2,9 @@ import { useState } from "react";
 import ApiService from "@/services/ApiService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { UserPlus, Mail, Lock, User, Phone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Layout from "@/components/layout/Layout";
+import CoastalScene from "@/components/brand/CoastalScene";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -20,15 +19,14 @@ const RegisterPage = () => {
     setLoading(true);
     try {
       await ApiService.registerUser({ name, email, password, phoneNumber });
-      toast({ title: "Registration Successful!", description: `User ${name} has been created` });
-      // Clear form after successful registration
+      toast({ title: "Registration successful", description: `User ${name} has been created` });
       setName("");
       setEmail("");
       setPassword("");
       setPhoneNumber("");
     } catch (error: any) {
       toast({
-        title: "Registration Failed",
+        title: "Registration failed",
         description: error.response?.data?.message || "Error registering user",
         variant: "destructive",
       });
@@ -39,65 +37,73 @@ const RegisterPage = () => {
 
   return (
     <Layout>
-      <div className="flex items-center justify-center p-4">
-        <Card className="w-full max-w-md shadow-elevated animate-slide-up">
-          <CardHeader className="text-center space-y-4">
-            <div className="mx-auto w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center shadow-glow">
-              <UserPlus className="w-8 h-8 text-primary-foreground" />
-            </div>
-            <div>
-              <CardTitle className="text-2xl font-bold">Register New User</CardTitle>
-              <CardDescription>Create a new account for 99 Lawn Care</CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleRegister} className="space-y-4">
-              <div className="relative">
-                <User className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                <Input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} className="pl-10" required />
-              </div>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                <Input 
-                  type="email" 
-                  placeholder="Email" 
-                  value={email} 
-                  onChange={(e) => setEmail(e.target.value)} 
-                  pattern=".+@.+\..+"
-                  className="pl-10" 
-                  required 
-                />
-              </div>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="pl-10" required />
-              </div>
-              <div className="relative">
-                <Phone className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                <Input 
-                  type="tel" 
-                  inputMode="numeric"
-                  pattern="\d{9,12}"
-                  placeholder="Phone Number" 
-                  value={phoneNumber} 
-                  minLength={9}
-                  maxLength={12}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (/^\d{0,12}$/.test(value)) {
-                      setPhoneNumber(value);
-                    }
-                  }}
-                  className="pl-10" 
-                  required 
-                />
-              </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Creating Account..." : "Register User"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+      <div className="mx-auto max-w-xl animate-rise">
+        <div className="relative mb-8 h-44 overflow-hidden rounded-2xl">
+          <CoastalScene className="absolute inset-0 h-full w-full" />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink/50 via-transparent to-transparent" />
+          <div className="absolute bottom-5 left-6">
+            <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-cream/80">New account</p>
+            <h1 className="mt-1 font-serif text-3xl font-semibold text-cream">Register a user</h1>
+          </div>
+        </div>
+
+        <form onSubmit={handleRegister} className="space-y-5 rounded-2xl border border-border bg-card p-6 md:p-8">
+          <div>
+            <label htmlFor="name" className="field-label">
+              Full name
+            </label>
+            <Input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+          </div>
+          <div>
+            <label htmlFor="email" className="field-label">
+              Email
+            </label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              pattern=".+@.+\..+"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="field-label">
+              Password
+            </label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="phone" className="field-label">
+              Phone number
+            </label>
+            <Input
+              id="phone"
+              type="tel"
+              inputMode="numeric"
+              pattern="\d{9,12}"
+              value={phoneNumber}
+              minLength={9}
+              maxLength={12}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d{0,12}$/.test(value)) {
+                  setPhoneNumber(value);
+                }
+              }}
+              required
+            />
+          </div>
+          <Button type="submit" className="h-12 w-full text-lg" disabled={loading}>
+            {loading ? "Creating account..." : "Create account"}
+          </Button>
+        </form>
       </div>
     </Layout>
   );

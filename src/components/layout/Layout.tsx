@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import Sidebar from "./Sidebar";
+import Header from "./Header";
 import HelpButton from "@/components/common/HelpButton";
 
 interface LayoutProps {
@@ -8,9 +8,9 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="layout">
-      <Sidebar />
-      <div className="main-content">{children}</div>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="mx-auto max-w-6xl px-5 py-8 md:px-8 md:py-10">{children}</div>
       <HelpButton />
     </div>
   );
