@@ -24,7 +24,7 @@ const LoginPage = () => {
       if (res.status === 200) {
         ApiService.saveToken(res.token);
         ApiService.saveRole(res.role);
-        toast({ title: "Welcome back", description: res.message });
+        toast({ title: "Welcome Back", description: res.message });
         navigate("/profile");
       }
     } catch (err: any) {
@@ -44,7 +44,7 @@ const LoginPage = () => {
         <CoastalScene className="absolute inset-0 h-full w-full" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-ink/10 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
-          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-cream/80">NextSteps</p>
+          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-cream/80">Next Steps</p>
           <h1 className="mt-3 max-w-md font-serif text-4xl font-semibold leading-tight text-cream drop-shadow-sm md:text-5xl">
             Discover your gifts. Find your place to serve.
           </h1>
