@@ -15,15 +15,15 @@ export const ProtectedRoute = ({ element }: RouteProps) => {
   );
 };
 
-// Protects authenticated routes
-export const DreamTeamLeaderRoute = ({ element }: RouteProps) => {
+// Protects admin and dream team leader routes
+export const LeaderRoute = ({ element }: RouteProps) => {
   const location = useLocation();
-  return ApiService.isAuthenticated() ? (
-    element
-  ) : (
-    <Navigate to="/login" replace state={{ from: location }} />
-  );
+  if (ApiService.canViewGroupRoster()) return element;
+  if (ApiService.isAuthenticated()) return <Navigate to="/profile" replace />;
+  return <Navigate to="/login" replace state={{ from: location }} />;
 };
+
+export const DreamTeamLeaderRoute = LeaderRoute;
 
 // Protects admin routes
 export const AdminRoute = ({ element }: RouteProps) => {

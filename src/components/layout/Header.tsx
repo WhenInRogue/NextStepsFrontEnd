@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 const Header = () => {
   const location = useLocation();
   const isAdmin = ApiService.isAdmin();
+  const canViewDashboard = ApiService.canViewGroupRoster();
   const [name, setName] = useState("");
 
   useEffect(() => {
@@ -32,9 +33,9 @@ const Header = () => {
 
   const links = [
     { path: "/profile", label: "Profile", show: true },
+    { path: "/dashboard", label: "Dashboard", show: canViewDashboard },
     { path: "/groups", label: "Groups", show: true },
     { path: "/tests", label: "Tests", show: isAdmin },
-    { path: "/register", label: "Register", show: isAdmin },
   ];
 
   const isCurrent = (path: string) =>
@@ -42,7 +43,9 @@ const Header = () => {
       ? location.pathname === "/groups" || location.pathname.startsWith("/groups/")
       : path === "/tests"
         ? location.pathname === "/tests" || location.pathname.startsWith("/tests/")
-        : location.pathname === path;
+        : path === "/dashboard"
+          ? location.pathname === "/dashboard" || location.pathname.startsWith("/users/")
+          : location.pathname === path;
 
   const initial = (name || "N").trim().charAt(0).toUpperCase();
 

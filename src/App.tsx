@@ -3,10 +3,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ProtectedRoute, AdminRoute } from "./services/Guard";
+import { ProtectedRoute, AdminRoute, LeaderRoute } from "./services/Guard";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage";
+import DashboardPage from "./pages/DashboardPage";
 import GroupsPage from "./pages/GroupsPage";
 import GroupDetailPage from "./pages/GroupDetailPage";
 import GroupFormPage from "./pages/GroupFormPage";
@@ -28,12 +29,13 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/register" element={<AdminRoute element={<RegisterPage />} />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/profile" element={<ProtectedRoute element={<ProfilePage />} />} />
+          <Route path="/dashboard" element={<LeaderRoute element={<DashboardPage />} />} />
           <Route path="/take/:id" element={<ProtectedRoute element={<TakeTestPage />} />} />
           <Route path="/results/:testResultId" element={<ProtectedRoute element={<TestResultPage />} />} />
-          <Route path="/users/:userId/assessments" element={<ProtectedRoute element={<UserAssessmentsPage />} />} />
+          <Route path="/users/:userId/assessments" element={<LeaderRoute element={<UserAssessmentsPage />} />} />
           <Route path="/groups" element={<ProtectedRoute element={<GroupsPage />} />} />
           <Route path="/groups/new" element={<AdminRoute element={<GroupFormPage />} />} />
           <Route path="/groups/:id" element={<ProtectedRoute element={<GroupDetailPage />} />} />

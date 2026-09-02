@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ApiService from "@/services/ApiService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -92,6 +92,13 @@ const LoginPage = () => {
               {loading ? "Entering..." : "Enter"}
             </Button>
           </form>
+
+          <p className="mt-8 text-center text-sm text-ink/70">
+            Need an account?{" "}
+            <Link to="/register" className="font-medium text-ink transition-colors hover:text-terra">
+              Create one
+            </Link>
+          </p>
         </div>
       </section>
     </div>

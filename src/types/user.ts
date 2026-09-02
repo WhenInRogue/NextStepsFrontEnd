@@ -1,4 +1,5 @@
-export type UserRole = "ADMIN" | "DREAM_TEAM_LEADER" | "MEMBER" | string;
+export const USER_ROLES = ["MEMBER", "DREAM_TEAM_LEADER", "ADMIN"] as const;
+export type UserRole = (typeof USER_ROLES)[number] | string;
 
 export type User = {
   id: number;
@@ -8,6 +9,17 @@ export type User = {
   role?: UserRole;
   createdAt?: string;
 };
+
+export type UserPayload = {
+  name?: string;
+  email?: string;
+  phoneNumber?: string;
+  role?: UserRole;
+};
+
+export function isUserRole(value: unknown): value is (typeof USER_ROLES)[number] {
+  return value === "MEMBER" || value === "DREAM_TEAM_LEADER" || value === "ADMIN";
+}
 
 export function normalizeUser(raw: unknown): User {
   const value = (raw ?? {}) as Record<string, unknown>;
@@ -26,7 +38,7 @@ export function normalizeUser(raw: unknown): User {
         : typeof value.phoneNumber === "string"
           ? value.phoneNumber
           : undefined,
-    role: typeof nested.role === "string" ? nested.role : typeof value.role === "string" ? value.role : undefined,
+    role: typeof nested.role === "string" ? nested.role.toUpperCase() : typeof value.role === "string" ? value.role.toUpperCase() : undefined,
     createdAt:
       typeof nested.createdAt === "string"
         ? nested.createdAt
@@ -55,4 +67,17 @@ export function extractUsers(res: unknown): User[] {
 export function userLabel(user: Pick<User, "name" | "email">): string {
   if (user.name && user.email) return `${user.name} (${user.email})`;
   return user.name || user.email || "Unknown member";
+}
+
+export function formatUserRole(role?: string): string {
+  if (role === "ADMIN") return "Admin";
+  if (role === "DREAM_TEAM_LEADER") return "Dream team leader";
+  if (role === "MEMBER") return "Member";
+  return role || "Member";
+}
+
+export function sortUsers(users: User[]): User[] {
+  return [...users].sort(
+    (a, b) => a.name.localeCompare(b.name) || (a.email || "").localeCompare(b.email || "") || a.id - b.id,
+  );
 }

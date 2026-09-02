@@ -5,7 +5,7 @@ import type { MembershipPayload } from "@/types/membership";
 import type { TestPayload } from "@/types/test";
 import type { CategoryPayload, CategoryType } from "@/types/category";
 import type { QuestionPayload } from "@/types/question";
-import type { AnswerPayload } from "@/types/answer";
+import type { UserPayload } from "@/types/user";
 
 export default class ApiService {
   static BASE_URL = "http://localhost:5050/api";
@@ -99,7 +99,7 @@ export default class ApiService {
     return response.data;
   }
 
-  static async updateUser(userId: string, userData: any) {
+  static async updateUser(userId: string | number, userData: UserPayload) {
     const response = await axios.put(
       `${this.BASE_URL}/users/update/${userId}`,
       userData,

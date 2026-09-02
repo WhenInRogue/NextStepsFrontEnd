@@ -24,7 +24,7 @@ const UserAssessmentsPage = () => {
 
   useEffect(() => {
     if (!userId) {
-      navigate("/groups", { replace: true });
+      navigate("/dashboard", { replace: true });
       return;
     }
 
@@ -64,7 +64,7 @@ const UserAssessmentsPage = () => {
           variant: "destructive",
         });
         if (status === 403 || status === 404) {
-          navigate("/groups", { replace: true });
+          navigate("/dashboard", { replace: true });
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -91,8 +91,8 @@ const UserAssessmentsPage = () => {
     <Layout>
       <div className="animate-rise">
         <p className="mb-4">
-          <Link to="/groups" className="text-sm text-muted-foreground transition-colors hover:text-ink">
-            ← Groups
+          <Link to="/dashboard" className="text-sm text-muted-foreground transition-colors hover:text-ink">
+            ← Dashboard
           </Link>
         </p>
 
