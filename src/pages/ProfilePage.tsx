@@ -4,7 +4,7 @@ import Layout from "@/components/layout/Layout";
 import ApiService from "@/services/ApiService";
 import { useToast } from "@/hooks/use-toast";
 import CoastalScene from "@/components/brand/CoastalScene";
-import { extractUser } from "@/types/user";
+import { extractUser, type User } from "@/types/user";
 import {
   extractMemberships,
   formatGroupPosition,
@@ -12,18 +12,18 @@ import {
   sortMemberships,
   type GroupMembership,
 } from "@/types/membership";
+import AssessmentsSection from "@/components/profile/AssessmentsSection";
 
 const ProfilePage = () => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [memberships, setMemberships] = useState<GroupMembership[]>([]);
   const { toast } = useToast();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userInfo = await ApiService.getLoggedInUserInfo();
-        setUser(userInfo);
-        const me = extractUser(userInfo);
+        const me = extractUser(await ApiService.getLoggedInUserInfo());
+        setUser(me);
         if (Number.isFinite(me.id) && me.id > 0) {
           try {
             const membershipRes = await ApiService.getMembershipsByUser(me.id);
@@ -34,6 +34,7 @@ const ProfilePage = () => {
         }
       } catch {
         toast({ title: "Error", description: "Failed to load profile", variant: "destructive" });
+        setUser({ id: 0, name: "" });
       }
     };
     fetchUser();
@@ -47,12 +48,11 @@ const ProfilePage = () => {
     );
   }
 
-  const me = extractUser(user);
   const fields = [
-    { label: "Name", value: me.name || user.name },
-    { label: "Email", value: me.email || user.email },
-    { label: "Phone", value: me.phoneNumber || user.phoneNumber },
-    { label: "Role", value: me.role || user.role },
+    { label: "Name", value: user.name || "—" },
+    { label: "Email", value: user.email || "—" },
+    { label: "Phone", value: user.phoneNumber || "—" },
+    { label: "Role", value: user.role || "—" },
   ];
 
   return (
@@ -67,9 +67,9 @@ const ProfilePage = () => {
                 Your profile
               </span>
               <h1 className="mt-3 font-serif text-4xl font-semibold text-cream drop-shadow-sm md:text-5xl">
-                {me.name || user.name}
+                {user.name}
               </h1>
-              <p className="mt-2 font-serif italic text-cream/85">{me.email || user.email}</p>
+              <p className="mt-2 font-serif italic text-cream/85">{user.email}</p>
             </div>
           </div>
         </section>
@@ -92,6 +92,8 @@ const ProfilePage = () => {
             ))}
           </dl>
         </section>
+
+        <AssessmentsSection />
 
         {memberships.length > 0 ? (
           <section className="mt-8 rounded-2xl border border-border bg-card p-6 md:p-8">

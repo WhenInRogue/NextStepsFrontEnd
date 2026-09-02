@@ -4,6 +4,8 @@ import type { GroupPayload } from "@/types/group";
 import type { MembershipPayload } from "@/types/membership";
 import type { TestPayload } from "@/types/test";
 import type { CategoryPayload, CategoryType } from "@/types/category";
+import type { QuestionPayload } from "@/types/question";
+import type { AnswerPayload } from "@/types/answer";
 
 export default class ApiService {
   static BASE_URL = "http://localhost:5050/api";
@@ -277,6 +279,110 @@ export default class ApiService {
 
   static async deleteCategory(categoryId: string | number) {
     const response = await axios.delete(`${this.BASE_URL}/categories/delete/${categoryId}`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  /** QUESTIONS API */
+  static async createQuestion(testId: string | number, payload: QuestionPayload) {
+    const response = await axios.post(`${this.BASE_URL}/tests/${testId}/addquestion`, payload, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async getQuestionsByTest(testId: string | number) {
+    const response = await axios.get(`${this.BASE_URL}/tests/${testId}/questions`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async getQuestionById(questionId: string | number) {
+    const response = await axios.get(`${this.BASE_URL}/questions/${questionId}`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async updateQuestion(questionId: string | number, payload: QuestionPayload) {
+    const response = await axios.put(`${this.BASE_URL}/questions/update/${questionId}`, payload, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async deleteQuestion(questionId: string | number) {
+    const response = await axios.delete(`${this.BASE_URL}/questions/delete/${questionId}`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  /** TAKE TEST / RESULTS API */
+  static async takeTest(testId: string | number) {
+    const response = await axios.post(
+      `${this.BASE_URL}/tests/${testId}/take`,
+      {},
+      { headers: this.getHeader() },
+    );
+    return response.data;
+  }
+
+  static async submitTest(testResultId: string | number) {
+    const response = await axios.post(
+      `${this.BASE_URL}/tests/submit/${testResultId}`,
+      {},
+      { headers: this.getHeader() },
+    );
+    return response.data;
+  }
+
+  static async getCurrentUserTestResults() {
+    const response = await axios.get(`${this.BASE_URL}/test-results/current`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async getTestResultsByUser(userId: string | number) {
+    const response = await axios.get(`${this.BASE_URL}/test-results/user/${userId}`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async getTestResultById(testResultId: string | number) {
+    const response = await axios.get(`${this.BASE_URL}/test-results/${testResultId}`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async saveAnswer(testResultId: string | number, payload: AnswerPayload) {
+    const response = await axios.post(`${this.BASE_URL}/test-results/${testResultId}/answer`, payload, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async getAnswersByTestResult(testResultId: string | number) {
+    const response = await axios.get(`${this.BASE_URL}/test-results/${testResultId}/answers`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async getScoresByTestResult(testResultId: string | number) {
+    const response = await axios.get(`${this.BASE_URL}/test-results/${testResultId}/scores`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async getScoresByUser(userId: string | number) {
+    const response = await axios.get(`${this.BASE_URL}/users/${userId}/category-scores`, {
       headers: this.getHeader(),
     });
     return response.data;

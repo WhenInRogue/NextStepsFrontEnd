@@ -18,6 +18,7 @@ import { useToast } from "@/hooks/use-toast";
 import ApiService from "@/services/ApiService";
 import { extractTest, formatTestCreatedAt, type Test } from "@/types/test";
 import CategoriesSection from "@/components/tests/CategoriesSection";
+import QuestionsSection from "@/components/tests/QuestionsSection";
 
 const TestDetailPage = () => {
   const { id } = useParams();
@@ -165,6 +166,7 @@ const TestDetailPage = () => {
           </dl>
         </section>
 
+        <QuestionsSection test={test} />
         <CategoriesSection />
       </div>
     </Layout>

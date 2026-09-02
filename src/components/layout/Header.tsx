@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ApiService from "@/services/ApiService";
 import BrandMark from "@/components/brand/BrandMark";
+import { extractUser } from "@/types/user";
 import { cn } from "@/lib/utils";
 
 const Header = () => {
@@ -13,8 +14,8 @@ const Header = () => {
     let cancelled = false;
     const load = async () => {
       try {
-        const user = await ApiService.getLoggedInUserInfo();
-        if (!cancelled) setName(user?.name ?? "");
+        const res = await ApiService.getLoggedInUserInfo();
+        if (!cancelled) setName(extractUser(res).name);
       } catch {
         if (!cancelled) setName("");
       }

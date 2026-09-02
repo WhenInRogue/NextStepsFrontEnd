@@ -6,6 +6,7 @@ export type User = {
   email?: string;
   phoneNumber?: string;
   role?: UserRole;
+  createdAt?: string;
 };
 
 export function normalizeUser(raw: unknown): User {
@@ -26,6 +27,12 @@ export function normalizeUser(raw: unknown): User {
           ? value.phoneNumber
           : undefined,
     role: typeof nested.role === "string" ? nested.role : typeof value.role === "string" ? value.role : undefined,
+    createdAt:
+      typeof nested.createdAt === "string"
+        ? nested.createdAt
+        : typeof value.createdAt === "string"
+          ? value.createdAt
+          : undefined,
   };
 }
 

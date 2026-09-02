@@ -13,6 +13,9 @@ import GroupFormPage from "./pages/GroupFormPage";
 import TestsPage from "./pages/TestsPage";
 import TestDetailPage from "./pages/TestDetailPage";
 import TestFormPage from "./pages/TestFormPage";
+import TakeTestPage from "./pages/TakeTestPage";
+import TestResultPage from "./pages/TestResultPage";
+import UserAssessmentsPage from "./pages/UserAssessmentsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +31,9 @@ const App = () => (
           <Route path="/register" element={<AdminRoute element={<RegisterPage />} />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/profile" element={<ProtectedRoute element={<ProfilePage />} />} />
+          <Route path="/take/:id" element={<ProtectedRoute element={<TakeTestPage />} />} />
+          <Route path="/results/:testResultId" element={<ProtectedRoute element={<TestResultPage />} />} />
+          <Route path="/users/:userId/assessments" element={<ProtectedRoute element={<UserAssessmentsPage />} />} />
           <Route path="/groups" element={<ProtectedRoute element={<GroupsPage />} />} />
           <Route path="/groups/new" element={<AdminRoute element={<GroupFormPage />} />} />
           <Route path="/groups/:id" element={<ProtectedRoute element={<GroupDetailPage />} />} />

@@ -10,7 +10,7 @@ export type TestPayload = {
   description?: string;
 };
 
-function normalizeDateTime(raw: unknown): string | undefined {
+export function normalizeDateTime(raw: unknown): string | undefined {
   if (typeof raw === "string" && raw.trim()) return raw;
   if (Array.isArray(raw) && raw.length >= 3) {
     const [year, month, day, hour = 0, minute = 0, second = 0] = raw as number[];

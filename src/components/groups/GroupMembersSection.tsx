@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -131,6 +132,8 @@ const GroupMembersSection = ({ group }: { group: Group }) => {
         membershipUserId(membership) === currentUser.id,
     );
   }, [isAdmin, isDreamTeamLeader, currentUser, members]);
+
+  const canViewAssessments = ApiService.canViewGroupRoster();
 
   const activeMemberIds = useMemo(() => {
     const ids = new Set<number>();
@@ -375,6 +378,7 @@ const GroupMembersSection = ({ group }: { group: Group }) => {
             const isSelf = currentUser != null && membershipUserId(membership) === currentUser.id;
             const removingSelfLeader = isSelf && membership.position === "LEADER";
             const busy = pendingId === membership.groupMembershipId;
+            const memberUserId = membershipUserId(membership);
             return (
               <li
                 key={membership.groupMembershipId}
@@ -401,6 +405,11 @@ const GroupMembersSection = ({ group }: { group: Group }) => {
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2">
+                    {canViewAssessments && memberUserId ? (
+                      <Button asChild variant="outline" size="sm">
+                        <Link to={isSelf ? "/profile" : `/users/${memberUserId}/assessments`}>Assessments</Link>
+                      </Button>
+                    ) : null}
                     {canManage && active ? (
                       <Select
                         value={membership.position}
