@@ -18,6 +18,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import ApiService from "@/services/ApiService";
 import { normalizeGroup, type Group } from "@/types/group";
+import GroupMembersSection from "@/components/groups/GroupMembersSection";
 
 const GroupDetailPage = () => {
   const { id } = useParams();
@@ -168,6 +169,8 @@ const GroupDetailPage = () => {
             ))}
           </dl>
         </section>
+
+        {ApiService.canViewGroupRoster() ? <GroupMembersSection group={group} /> : null}
       </div>
     </Layout>
   );

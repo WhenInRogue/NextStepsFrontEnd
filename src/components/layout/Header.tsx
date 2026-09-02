@@ -32,13 +32,16 @@ const Header = () => {
   const links = [
     { path: "/profile", label: "Profile", show: true },
     { path: "/groups", label: "Groups", show: true },
+    { path: "/tests", label: "Tests", show: isAdmin },
     { path: "/register", label: "Register", show: isAdmin },
   ];
 
   const isCurrent = (path: string) =>
     path === "/groups"
       ? location.pathname === "/groups" || location.pathname.startsWith("/groups/")
-      : location.pathname === path;
+      : path === "/tests"
+        ? location.pathname === "/tests" || location.pathname.startsWith("/tests/")
+        : location.pathname === path;
 
   const initial = (name || "N").trim().charAt(0).toUpperCase();
 

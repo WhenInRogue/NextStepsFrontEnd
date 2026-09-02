@@ -1,6 +1,9 @@
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import type { GroupPayload } from "@/types/group";
+import type { MembershipPayload } from "@/types/membership";
+import type { TestPayload } from "@/types/test";
+import type { CategoryPayload, CategoryType } from "@/types/category";
 
 export default class ApiService {
   static BASE_URL = "http://localhost:5050/api";
@@ -158,6 +161,127 @@ export default class ApiService {
     return response.data;
   }
 
+  /** GROUP MEMBERSHIPS API */
+  static async addMember(groupId: string | number, payload: MembershipPayload) {
+    const response = await axios.post(
+      `${this.BASE_URL}/groups/${groupId}/addmember`,
+      payload,
+      { headers: this.getHeader() },
+    );
+    return response.data;
+  }
+
+  static async getMembersByGroup(groupId: string | number) {
+    const response = await axios.get(`${this.BASE_URL}/groups/${groupId}/members`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async getMembershipsByUser(userId: string | number) {
+    const response = await axios.get(`${this.BASE_URL}/users/${userId}/memberships`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async updateMembership(membershipId: string | number, payload: MembershipPayload) {
+    const response = await axios.put(
+      `${this.BASE_URL}/memberships/${membershipId}`,
+      payload,
+      { headers: this.getHeader() },
+    );
+    return response.data;
+  }
+
+  static async removeMember(membershipId: string | number) {
+    const response = await axios.put(
+      `${this.BASE_URL}/memberships/${membershipId}/remove`,
+      {},
+      { headers: this.getHeader() },
+    );
+    return response.data;
+  }
+
+  /** TESTS API */
+  static async createTest(testData: TestPayload) {
+    const response = await axios.post(`${this.BASE_URL}/tests/add`, testData, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async getAllTests() {
+    const response = await axios.get(`${this.BASE_URL}/tests/all`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async getTestById(testId: string | number) {
+    const response = await axios.get(`${this.BASE_URL}/tests/${testId}`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async updateTest(testId: string | number, testData: TestPayload) {
+    const response = await axios.put(`${this.BASE_URL}/tests/update/${testId}`, testData, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async deleteTest(testId: string | number) {
+    const response = await axios.delete(`${this.BASE_URL}/tests/delete/${testId}`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  /** CATEGORIES API */
+  static async createCategory(payload: CategoryPayload) {
+    const response = await axios.post(`${this.BASE_URL}/categories/add`, payload, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async getAllCategories() {
+    const response = await axios.get(`${this.BASE_URL}/categories/all`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async getCategoriesByType(categoryType: CategoryType) {
+    const response = await axios.get(`${this.BASE_URL}/categories/type/${categoryType}`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async getCategoryById(categoryId: string | number) {
+    const response = await axios.get(`${this.BASE_URL}/categories/${categoryId}`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async updateCategory(categoryId: string | number, payload: CategoryPayload) {
+    const response = await axios.put(`${this.BASE_URL}/categories/update/${categoryId}`, payload, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
+  static async deleteCategory(categoryId: string | number) {
+    const response = await axios.delete(`${this.BASE_URL}/categories/delete/${categoryId}`, {
+      headers: this.getHeader(),
+    });
+    return response.data;
+  }
+
   static getErrorMessage(error: unknown, fallback = "Something went wrong"): string {
     const err = error as { response?: { data?: { message?: string } } };
     if (!err?.response) {
@@ -188,5 +312,9 @@ export default class ApiService {
   static isDreamTeamLeader(): boolean {
     const role = this.getRole();
     return role === "DREAM_TEAM_LEADER";
+  }
+
+  static canViewGroupRoster(): boolean {
+    return this.isAdmin() || this.isDreamTeamLeader();
   }
 }

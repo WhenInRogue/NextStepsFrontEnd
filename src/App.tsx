@@ -10,6 +10,9 @@ import ProfilePage from "./pages/ProfilePage";
 import GroupsPage from "./pages/GroupsPage";
 import GroupDetailPage from "./pages/GroupDetailPage";
 import GroupFormPage from "./pages/GroupFormPage";
+import TestsPage from "./pages/TestsPage";
+import TestDetailPage from "./pages/TestDetailPage";
+import TestFormPage from "./pages/TestFormPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +32,10 @@ const App = () => (
           <Route path="/groups/new" element={<AdminRoute element={<GroupFormPage />} />} />
           <Route path="/groups/:id" element={<ProtectedRoute element={<GroupDetailPage />} />} />
           <Route path="/groups/:id/edit" element={<AdminRoute element={<GroupFormPage />} />} />
+          <Route path="/tests" element={<AdminRoute element={<TestsPage />} />} />
+          <Route path="/tests/new" element={<AdminRoute element={<TestFormPage />} />} />
+          <Route path="/tests/:id" element={<AdminRoute element={<TestDetailPage />} />} />
+          <Route path="/tests/:id/edit" element={<AdminRoute element={<TestFormPage />} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
