@@ -77,7 +77,13 @@ const TakeTestPage = () => {
         setIndex(0);
       } catch (err) {
         if (cancelled) return;
-        setError(ApiService.getErrorMessage(err, "Couldn’t start this test"));
+        const status = ApiService.getErrorStatus(err);
+        setError(
+          ApiService.getErrorMessage(
+            err,
+            status === 403 ? "You do not have access to this test" : "Couldn’t start this test",
+          ),
+        );
       } finally {
         if (!cancelled && !redirected) setLoading(false);
       }

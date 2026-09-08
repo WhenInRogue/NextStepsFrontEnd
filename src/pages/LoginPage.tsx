@@ -55,7 +55,7 @@ const LoginPage = () => {
         <div className="w-full max-w-[420px] animate-rise">
           <BrandMark subtitle="New Life St Louis" />
 
-          <h2 className="mt-12 font-serif text-4xl font-semibold text-ink md:text-[2.75rem]">Welcome back</h2>
+          <h2 className="mt-12 font-serif text-4xl font-semibold text-ink md:text-[2.75rem]">Welcome Back</h2>
           <p className="mt-3 text-sm text-ink/70">Return to your account — your progress is kept for you.</p>
 
           <form onSubmit={handleLogin} className="mt-10 space-y-5">

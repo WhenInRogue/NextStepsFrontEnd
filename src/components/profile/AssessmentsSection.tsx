@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import ApiService from "@/services/ApiService";
-import { extractTests, type Test } from "@/types/test";
+import { extractTests, isTestActive, type Test } from "@/types/test";
 import {
   extractTestResults,
   formatCompletedAt,
@@ -72,6 +72,11 @@ const AssessmentsSection = () => {
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="font-medium text-ink">{test.name}</p>
+                      {!isTestActive(test) ? (
+                        <span className="rounded-full bg-ink/10 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.16em] text-ink/55">
+                          Inactive
+                        </span>
+                      ) : null}
                       {incomplete ? (
                         <span className="rounded-full bg-ochre/40 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.16em] text-ink">
                           In progress

@@ -16,8 +16,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import ApiService from "@/services/ApiService";
-import { extractTest, formatTestCreatedAt, type Test } from "@/types/test";
+import { assignedGroupIds, extractTest, formatTestAudience, formatTestCreatedAt, type Test } from "@/types/test";
 import QuestionsSection from "@/components/tests/QuestionsSection";
+import TestStatusBadge from "@/components/tests/TestStatusBadge";
 
 const TestDetailPage = () => {
   const { id } = useParams();
@@ -42,9 +43,13 @@ const TestDetailPage = () => {
         }
         setTest(loaded);
       } catch (err) {
+        const status = ApiService.getErrorStatus(err);
         toast({
-          title: "Test not found",
-          description: ApiService.getErrorMessage(err, "Test Not Found"),
+          title: status === 403 ? "Access denied" : "Test not found",
+          description: ApiService.getErrorMessage(
+            err,
+            status === 403 ? "You do not have access to this test" : "Test Not Found",
+          ),
           variant: "destructive",
         });
         navigate("/tests", { replace: true });
@@ -83,9 +88,13 @@ const TestDetailPage = () => {
   }
 
   const created = formatTestCreatedAt(test.createdAt);
+  const assignedIds = assignedGroupIds(test);
+  const assignedGroups = test.groups?.filter((group) => assignedIds.includes(group.groupId)) ?? [];
   const fields = [
     { label: "Name", value: test.name },
     { label: "Description", value: test.description || "—" },
+    { label: "Status", value: test.isActive === false ? "Inactive" : "Active" },
+    { label: "Audience", value: formatTestAudience(test.audience) },
     { label: "Created", value: created || "—" },
   ];
 
@@ -103,9 +112,12 @@ const TestDetailPage = () => {
             <CoastalScene className="absolute inset-0 h-full w-full" />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/15 to-transparent" />
             <div className="absolute bottom-6 left-6 right-6 md:bottom-8 md:left-8">
-              <span className="inline-block rounded-full bg-sand/90 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-ink">
-                Assessment
-              </span>
+              <div className="flex flex-wrap gap-2">
+                <TestStatusBadge test={test} className="bg-sand/90 text-ink" />
+                <span className="inline-block rounded-full bg-sand/90 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-ink">
+                  {formatTestAudience(test.audience)}
+                </span>
+              </div>
               <h1 className="mt-3 font-serif text-4xl font-semibold text-cream drop-shadow-sm md:text-5xl">
                 {test.name}
               </h1>
@@ -163,6 +175,33 @@ const TestDetailPage = () => {
               </div>
             ))}
           </dl>
+          {test.audience === "GROUPS" ? (
+            <div className="mt-4 rounded-xl bg-sand/70 px-4 py-4">
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                Assigned groups
+              </p>
+              {assignedGroups.length > 0 ? (
+                <ul className="mt-2 flex flex-wrap gap-2">
+                  {assignedGroups.map((group) => (
+                    <li key={group.groupId}>
+                      <Link
+                        to={`/groups/${group.groupId}`}
+                        className="rounded-full bg-card px-3 py-1 text-sm font-medium text-ink transition-colors hover:bg-sand"
+                      >
+                        {group.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : assignedIds.length > 0 ? (
+                <p className="mt-1 font-medium text-ink">
+                  {assignedIds.length === 1 ? "1 group assigned" : `${assignedIds.length} groups assigned`}
+                </p>
+              ) : (
+                <p className="mt-1 text-sm text-muted-foreground">No groups assigned yet.</p>
+              )}
+            </div>
+          ) : null}
         </section>
 
         <QuestionsSection test={test} />

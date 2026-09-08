@@ -4,8 +4,10 @@ import Layout from "@/components/layout/Layout";
 import CoastalScene from "@/components/brand/CoastalScene";
 import { Button } from "@/components/ui/button";
 import ApiService from "@/services/ApiService";
-import { extractTests, formatTestCreatedAt, type Test } from "@/types/test";
+import { extractTests, formatTestAudience, formatTestCreatedAt, isTestActive, type Test } from "@/types/test";
 import CategoriesSection from "@/components/tests/CategoriesSection";
+import TestStatusBadge from "@/components/tests/TestStatusBadge";
+import { cn } from "@/lib/utils";
 
 const TestsPage = () => {
   const [tests, setTests] = useState<Test[]>([]);
@@ -76,21 +78,31 @@ const TestsPage = () => {
           <ul className="mt-6 grid gap-4 sm:grid-cols-2">
             {tests.map((test) => {
               const created = formatTestCreatedAt(test.createdAt);
+              const active = isTestActive(test);
+              const groupCount = test.audience === "GROUPS" ? test.groupIds.length : 0;
               return (
                 <li key={test.id}>
                   <Link
                     to={`/tests/${test.id}`}
-                    className="block rounded-2xl border border-border bg-card p-6 transition-colors hover:bg-sand/60"
+                    className={cn(
+                      "block rounded-2xl border border-border bg-card p-6 transition-colors hover:bg-sand/60",
+                      !active && "opacity-80",
+                    )}
                   >
-                    <h2 className="font-serif text-2xl font-semibold text-ink">{test.name}</h2>
+                    <div className="flex items-start justify-between gap-3">
+                      <h2 className="font-serif text-2xl font-semibold text-ink">{test.name}</h2>
+                      <TestStatusBadge test={test} />
+                    </div>
                     <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
                       {test.description || "No description yet."}
                     </p>
-                    {created ? (
-                      <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                        Created {created}
-                      </p>
-                    ) : null}
+                    <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                      {formatTestAudience(test.audience)}
+                      {test.audience === "GROUPS"
+                        ? ` · ${groupCount === 1 ? "1 group" : `${groupCount} groups`}`
+                        : ""}
+                      {created ? ` · Created ${created}` : ""}
+                    </p>
                   </Link>
                 </li>
               );
