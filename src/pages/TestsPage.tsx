@@ -20,7 +20,7 @@ const TestsPage = () => {
         const res = await ApiService.getAllTests();
         setTests(extractTests(res));
       } catch (err) {
-        setError(ApiService.getErrorMessage(err, "Failed to load tests"));
+        setError(ApiService.getErrorMessage(err, "Failed to load assessments"));
       } finally {
         setLoading(false);
       }
@@ -47,7 +47,7 @@ const TestsPage = () => {
               <span className="inline-block rounded-full bg-sand/90 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-ink">
                 Admin
               </span>
-              <h1 className="mt-3 font-serif text-4xl font-semibold text-cream drop-shadow-sm md:text-5xl">Tests</h1>
+              <h1 className="mt-3 font-serif text-4xl font-semibold text-cream drop-shadow-sm md:text-5xl">Assessments</h1>
               <p className="mt-2 max-w-xl text-sm text-cream/85">
                 Create and tend the assessments members will take.
               </p>
@@ -56,9 +56,9 @@ const TestsPage = () => {
         </section>
 
         <div className="mt-8 flex items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">{tests.length === 1 ? "1 test" : `${tests.length} tests`}</p>
+          <p className="text-sm text-muted-foreground">{tests.length === 1 ? "1 assessment" : `${tests.length} assessments`}</p>
           <Button asChild>
-            <Link to="/tests/new">New test</Link>
+            <Link to="/tests/new">New assessment</Link>
           </Button>
         </div>
 
@@ -66,12 +66,12 @@ const TestsPage = () => {
 
         {tests.length === 0 && !error ? (
           <section className="mt-6 rounded-2xl border border-border bg-card px-6 py-16 text-center">
-            <h2 className="font-serif text-2xl font-semibold text-ink">No tests yet</h2>
+            <h2 className="font-serif text-2xl font-semibold text-ink">No assessments yet</h2>
             <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
               Start with a name and a short description. Questions can be added later.
             </p>
             <Button asChild className="mt-6">
-              <Link to="/tests/new">Create a test</Link>
+              <Link to="/tests/new">Create an assessment</Link>
             </Button>
           </section>
         ) : (

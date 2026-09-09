@@ -55,7 +55,7 @@ const UserAssessmentsPage = () => {
         const status = ApiService.getErrorStatus(err);
         const message = ApiService.getErrorMessage(
           err,
-          status === 403 ? "You can only view your own test results" : "Failed to load assessments",
+          status === 403 ? "You can only view your own assessment results" : "Failed to load assessments",
         );
         setError(message);
         toast({

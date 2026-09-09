@@ -77,7 +77,7 @@ const ProfilePage = () => {
         <section className="mt-8 rounded-2xl border border-border bg-card p-6 md:p-8">
           <div className="mb-6 flex items-end justify-between gap-4">
             <div>
-              <h2 className="font-serif text-2xl font-semibold text-ink">Account details</h2>
+              <h2 className="font-serif text-2xl font-semibold text-ink">Account Details</h2>
               <p className="mt-1 text-sm text-muted-foreground">The particulars we keep on file for you.</p>
             </div>
           </div>

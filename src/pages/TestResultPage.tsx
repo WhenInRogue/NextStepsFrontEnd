@@ -52,7 +52,7 @@ const TestResultPage = () => {
         if (cancelled) return;
 
         const loaded = extractTestResult(resultRes);
-        if (!loaded) throw new Error("Test Result Not Found");
+        if (!loaded) throw new Error("Assessment results not found");
 
         if (!isTestResultComplete(loaded)) {
           redirected = true;
@@ -100,7 +100,7 @@ const TestResultPage = () => {
         const status = ApiService.getErrorStatus(err);
         const message = ApiService.getErrorMessage(
           err,
-          status === 403 ? "You can only view your own test results" : "Test Result Not Found",
+          status === 403 ? "You can only view your own assessment results" : "Assessment results not found",
         );
         setError(message);
         toast({

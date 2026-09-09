@@ -12,6 +12,7 @@ import GroupStatusBadge from "@/components/groups/GroupStatusBadge";
 import { useToast } from "@/hooks/use-toast";
 import ApiService from "@/services/ApiService";
 import { extractGroups, isGroupActive, sortGroups, type Group } from "@/types/group";
+import { toUserFacingCopy } from "@/lib/utils";
 import {
   assignedGroupIds,
   extractTest,
@@ -67,7 +68,7 @@ const TestFormPage = () => {
         const res = await ApiService.getTestById(id);
         const test = extractTest(res);
         if (!test) {
-          throw new Error("Test Not Found");
+          throw new Error("Assessment not found");
         }
         if (cancelled) return;
         setOriginal(test);
@@ -79,8 +80,8 @@ const TestFormPage = () => {
       } catch (err) {
         if (cancelled) return;
         toast({
-          title: "Test not found",
-          description: ApiService.getErrorMessage(err, "Failed to load test"),
+          title: "Assessment not found",
+          description: ApiService.getErrorMessage(err, "Failed to load assessment"),
           variant: "destructive",
         });
         navigate("/tests", { replace: true });
@@ -124,11 +125,11 @@ const TestFormPage = () => {
     e.preventDefault();
     const trimmedName = name.trim();
     if (!trimmedName) {
-      setError("Test Name is required");
+      setError("Assessment name is required");
       return;
     }
     if (audience === "GROUPS" && selectedGroupIds.length === 0) {
-      setError("Select at least one group, or make this test available to everyone.");
+      setError("Select at least one group, or make this assessment available to everyone.");
       return;
     }
 
@@ -144,7 +145,7 @@ const TestFormPage = () => {
           return;
         }
         const res = await ApiService.updateTest(id, payload);
-        toast({ title: "Test updated", description: res.message || "Test Updated Successfully" });
+        toast({ title: "Assessment updated", description: toUserFacingCopy(res.message || "Assessment updated successfully") });
         navigate(`/tests/${id}`);
       } else {
         const payload: TestPayload = { name: trimmedName, isActive, audience };
@@ -152,11 +153,11 @@ const TestFormPage = () => {
         if (trimmedDescription) payload.description = trimmedDescription;
         if (audience === "GROUPS") payload.groupIds = selectedGroupIds;
         const res = await ApiService.createTest(payload);
-        toast({ title: "Test created", description: res.message || "Test Created Successfully" });
+        toast({ title: "Assessment created", description: toUserFacingCopy(res.message || "Assessment created successfully") });
         navigate("/tests");
       }
     } catch (err) {
-      setError(ApiService.getErrorMessage(err, isEdit ? "Failed to update test" : "Failed to create test"));
+      setError(ApiService.getErrorMessage(err, isEdit ? "Failed to update assessment" : "Failed to create assessment"));
     } finally {
       setSaving(false);
     }
@@ -177,7 +178,7 @@ const TestFormPage = () => {
       <div className="mx-auto max-w-xl animate-rise">
         <p className="mb-4">
           <Link to={backTo} className="text-sm text-muted-foreground transition-colors hover:text-ink">
-            ← {isEdit ? "Test" : "Tests"}
+            ← {isEdit ? "Assessment" : "Assessments"}
           </Link>
         </p>
 
@@ -189,7 +190,7 @@ const TestFormPage = () => {
               {isEdit ? "Update assessment" : "New assessment"}
             </p>
             <h1 className="mt-1 font-serif text-3xl font-semibold text-cream">
-              {isEdit ? "Edit test" : "Create a test"}
+              {isEdit ? "Edit assessment" : "Create an assessment"}
             </h1>
           </div>
         </div>
@@ -217,9 +218,9 @@ const TestFormPage = () => {
           <div className="flex items-center justify-between gap-4 rounded-xl bg-sand/70 px-4 py-4">
             <div>
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Active</p>
-              <p className="mt-1 text-sm text-ink/70">Inactive tests are hidden from members.</p>
+              <p className="mt-1 text-sm text-ink/70">Inactive assessments are hidden from members.</p>
             </div>
-            <Switch checked={isActive} onCheckedChange={setIsActive} aria-label="Test is active" />
+            <Switch checked={isActive} onCheckedChange={setIsActive} aria-label="Assessment is active" />
           </div>
 
           <fieldset>
@@ -238,7 +239,7 @@ const TestFormPage = () => {
                 <RadioGroupItem value="EVERYONE" id="audience-everyone" className="mt-1" />
                 <span>
                   <span className="block font-medium text-ink">Everyone</span>
-                  <span className="mt-1 block text-sm text-ink/70">Any member can take this test.</span>
+                  <span className="mt-1 block text-sm text-ink/70">Any member can take this assessment.</span>
                 </span>
               </label>
               <label
@@ -259,7 +260,7 @@ const TestFormPage = () => {
               <p className="field-label">Assigned groups</p>
               {groups.length === 0 ? (
                 <p className="rounded-xl bg-sand/70 px-4 py-4 text-sm text-muted-foreground">
-                  No groups yet. Create a team first, then assign this test.
+                  No groups yet. Create a team first, then assign this assessment.
                 </p>
               ) : (
                 <ul className="max-h-56 space-y-1 overflow-y-auto rounded-xl bg-sand/70 p-2">
@@ -287,7 +288,7 @@ const TestFormPage = () => {
           {error ? <p className="error-banner">{error}</p> : null}
 
           <Button type="submit" className="h-12 w-full text-lg" disabled={saving}>
-            {saving ? (isEdit ? "Saving..." : "Creating test...") : isEdit ? "Save changes" : "Create test"}
+            {saving ? (isEdit ? "Saving..." : "Creating assessment...") : isEdit ? "Save changes" : "Create assessment"}
           </Button>
         </form>
       </div>

@@ -24,6 +24,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import ApiService from "@/services/ApiService";
+import { toUserFacingCopy } from "@/lib/utils";
 import {
   extractCategories,
   extractCategory,
@@ -144,7 +145,7 @@ const CategoriesSection = () => {
         } else {
           await load();
         }
-        toast({ title: "Category updated", description: res.message || "Category Updated Successfully" });
+        toast({ title: "Category updated", description: toUserFacingCopy(res.message || "Category updated successfully") });
       } else {
         const payload: CategoryPayload = {
           categoryName: trimmedName,
@@ -159,7 +160,7 @@ const CategoriesSection = () => {
         } else {
           await load();
         }
-        toast({ title: "Category created", description: res.message || "Category Created Successfully" });
+        toast({ title: "Category created", description: toUserFacingCopy(res.message || "Category created successfully") });
       }
       setFormOpen(false);
     } catch (err) {
@@ -174,7 +175,7 @@ const CategoriesSection = () => {
     try {
       const res = await ApiService.deleteCategory(category.categoryId);
       setCategories((prev) => prev.filter((item) => item.categoryId !== category.categoryId));
-      toast({ title: "Category deleted", description: res.message || "Category Deleted Successfully" });
+      toast({ title: "Category deleted", description: toUserFacingCopy(res.message || "Category deleted successfully") });
     } catch (err) {
       toast({
         title: "Couldn’t delete category",
@@ -194,7 +195,7 @@ const CategoriesSection = () => {
         <div>
           <h2 className="font-serif text-2xl font-semibold text-ink">Categories</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Gifts and team interests questions will score into. These are shared across every test.
+            Gifts and team interests questions will score into. These are shared across every assessment.
           </p>
         </div>
         <Button type="button" onClick={openCreate}>
@@ -321,7 +322,7 @@ const CategoriesSection = () => {
                                   </AlertDialogTitle>
                                   <AlertDialogDescription>
                                     This permanently deletes the category, every question linked to it, and all scores
-                                    from submitted tests. This cannot be undone.
+                                    from submitted assessments. This cannot be undone.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>

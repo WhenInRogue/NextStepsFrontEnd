@@ -47,7 +47,7 @@ const AssessmentsSection = () => {
     <section className="mt-8 rounded-2xl border border-border bg-card p-6 md:p-8">
       <div className="mb-6">
         <h2 className="font-serif text-2xl font-semibold text-ink">Assessments</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Take a test to see your spiritual gifts and team interests.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Take an assessment to see your spiritual gifts and team interests.</p>
       </div>
 
       {error ? <p className="error-banner">{error}</p> : null}
@@ -64,7 +64,7 @@ const AssessmentsSection = () => {
             const incomplete = incompleteResultForTest(results, test.id);
             const completed = latestCompletedResultForTest(results, test.id);
             const hasCompleted = hasCompletedTest(results, test.id);
-            const actionLabel = incomplete ? "Continue" : hasCompleted ? "Take again" : "Take test";
+            const actionLabel = incomplete ? "Continue" : hasCompleted ? "Take again" : "Take assessment";
             const completedLabel = formatCompletedAt(completed?.completedAt);
             return (
               <li key={test.id} className="rounded-xl bg-sand/70 px-4 py-4">

@@ -19,6 +19,7 @@ import ApiService from "@/services/ApiService";
 import { assignedGroupIds, extractTest, formatTestAudience, formatTestCreatedAt, type Test } from "@/types/test";
 import QuestionsSection from "@/components/tests/QuestionsSection";
 import TestStatusBadge from "@/components/tests/TestStatusBadge";
+import { toUserFacingCopy } from "@/lib/utils";
 
 const TestDetailPage = () => {
   const { id } = useParams();
@@ -39,16 +40,16 @@ const TestDetailPage = () => {
         const res = await ApiService.getTestById(id);
         const loaded = extractTest(res);
         if (!loaded) {
-          throw new Error("Test Not Found");
+          throw new Error("Assessment not found");
         }
         setTest(loaded);
       } catch (err) {
         const status = ApiService.getErrorStatus(err);
         toast({
-          title: status === 403 ? "Access denied" : "Test not found",
+          title: status === 403 ? "Access denied" : "Assessment not found",
           description: ApiService.getErrorMessage(
             err,
-            status === 403 ? "You do not have access to this test" : "Test Not Found",
+            status === 403 ? "You do not have access to this assessment" : "Assessment not found",
           ),
           variant: "destructive",
         });
@@ -66,12 +67,12 @@ const TestDetailPage = () => {
     setDeleting(true);
     try {
       const res = await ApiService.deleteTest(id);
-      toast({ title: "Test deleted", description: res.message || `${test.name} has been removed.` });
+      toast({ title: "Assessment deleted", description: toUserFacingCopy(res.message || `${test.name} has been removed.`) });
       navigate("/tests", { replace: true });
     } catch (err) {
       toast({
-        title: "Couldn’t delete test",
-        description: ApiService.getErrorMessage(err, "Failed to delete test"),
+        title: "Couldn’t delete assessment",
+        description: ApiService.getErrorMessage(err, "Failed to delete assessment"),
         variant: "destructive",
       });
     } finally {
@@ -103,7 +104,7 @@ const TestDetailPage = () => {
       <div className="animate-rise">
         <p className="mb-4">
           <Link to="/tests" className="text-sm text-muted-foreground transition-colors hover:text-ink">
-            ← Tests
+            ← Assessments
           </Link>
         </p>
 
@@ -131,7 +132,7 @@ const TestDetailPage = () => {
         <section className="mt-8 rounded-2xl border border-border bg-card p-6 md:p-8">
           <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h2 className="font-serif text-2xl font-semibold text-ink">Test details</h2>
+              <h2 className="font-serif text-2xl font-semibold text-ink">Assessment details</h2>
               <p className="mt-1 text-sm text-muted-foreground">The particulars we keep for this assessment.</p>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -148,7 +149,7 @@ const TestDetailPage = () => {
                   <AlertDialogHeader>
                     <AlertDialogTitle className="font-serif">Delete {test.name}?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      This permanently deletes the test, all of its questions, and every result anyone has submitted.
+                      This permanently deletes the assessment, all of its questions, and every result anyone has submitted.
                       This cannot be undone.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
@@ -158,7 +159,7 @@ const TestDetailPage = () => {
                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                       onClick={handleDelete}
                     >
-                      Delete test
+                      Delete assessment
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>

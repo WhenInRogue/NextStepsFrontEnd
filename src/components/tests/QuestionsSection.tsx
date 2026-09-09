@@ -24,6 +24,7 @@ import {
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import ApiService from "@/services/ApiService";
+import { toUserFacingCopy } from "@/lib/utils";
 import {
   extractCategories,
   formatCategoryType,
@@ -175,7 +176,7 @@ const QuestionsSection = ({ test }: { test: Test }) => {
       (item) => item.questionNumber === questionNumber && item.questionId !== editing?.questionId,
     );
     if (taken) {
-      setFormError("Question number already exists on this test");
+      setFormError("Question number already exists on this assessment");
       return;
     }
 
@@ -198,7 +199,7 @@ const QuestionsSection = ({ test }: { test: Test }) => {
         }
         const res = await ApiService.updateQuestion(editing.questionId, payload);
         applyQuestion(extractQuestion(res), editing.category);
-        toast({ title: "Question updated", description: res.message || "Question Updated Successfully" });
+        toast({ title: "Question updated", description: toUserFacingCopy(res.message || "Question updated successfully") });
       } else {
         const selectedCategory = categories.find((item) => item.categoryId === categoryId);
         const res = await ApiService.createQuestion(test.id, {
@@ -207,7 +208,7 @@ const QuestionsSection = ({ test }: { test: Test }) => {
           categoryId,
         });
         applyQuestion(extractQuestion(res), selectedCategory);
-        toast({ title: "Question created", description: res.message || "Question Created Successfully" });
+        toast({ title: "Question created", description: toUserFacingCopy(res.message || "Question created successfully") });
       }
       setFormOpen(false);
     } catch (err) {
@@ -222,7 +223,7 @@ const QuestionsSection = ({ test }: { test: Test }) => {
     try {
       const res = await ApiService.deleteQuestion(question.questionId);
       setQuestions((prev) => prev.filter((item) => item.questionId !== question.questionId));
-      toast({ title: "Question deleted", description: res.message || "Question Deleted Successfully" });
+      toast({ title: "Question deleted", description: toUserFacingCopy(res.message || "Question deleted successfully") });
     } catch (err) {
       toast({
         title: "Couldn’t delete question",

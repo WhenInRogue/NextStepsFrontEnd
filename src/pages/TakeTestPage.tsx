@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import ApiService from "@/services/ApiService";
-import { cn } from "@/lib/utils";
+import { cn, toUserFacingCopy } from "@/lib/utils";
 import { answersByQuestionId, extractAnswers, isResponseValue, RESPONSE_OPTIONS } from "@/types/answer";
 import { sortQuestions, type Question } from "@/types/question";
 import { extractSubmittedResult, extractTakeSession, isTestResultComplete, type TestResult } from "@/types/test-result";
@@ -51,9 +51,9 @@ const TakeTestPage = () => {
       try {
         const takeRes = await ApiService.takeTest(id);
         const session = extractTakeSession(takeRes);
-        if (!session) throw new Error("Could not start this test");
+        if (!session) throw new Error("Could not start this assessment");
         if (session.questions.length === 0) {
-          throw new Error("This test has no questions yet");
+          throw new Error("This assessment has no questions yet");
         }
 
         let nextResponses: Record<number, number> = {};
@@ -81,7 +81,7 @@ const TakeTestPage = () => {
         setError(
           ApiService.getErrorMessage(
             err,
-            status === 403 ? "You do not have access to this test" : "Couldn’t start this test",
+            status === 403 ? "You do not have access to this assessment" : "Couldn’t start this assessment",
           ),
         );
       } finally {
@@ -132,7 +132,7 @@ const TakeTestPage = () => {
       const res = await ApiService.submitTest(testResult.testResultId);
       const submittedResult = extractSubmittedResult(res);
       const resultId = submittedResult?.testResult.testResultId ?? testResult.testResultId;
-      toast({ title: "Test submitted", description: res.message || "Test submitted successfully" });
+      toast({ title: "Assessment submitted", description: toUserFacingCopy(res.message || "Assessment submitted successfully") });
       navigate(`/results/${resultId}`, {
         replace: true,
         state: submittedResult
@@ -141,8 +141,8 @@ const TakeTestPage = () => {
       });
     } catch (err) {
       toast({
-        title: "Couldn’t submit test",
-        description: ApiService.getErrorMessage(err, "Failed to submit test"),
+        title: "Couldn’t submit assessment",
+        description: ApiService.getErrorMessage(err, "Failed to submit assessment"),
         variant: "destructive",
       });
     } finally {
@@ -167,7 +167,7 @@ const TakeTestPage = () => {
               ← Profile
             </Link>
           </p>
-          <p className="error-banner">{error || "This test has no questions yet"}</p>
+          <p className="error-banner">{error || "This assessment has no questions yet"}</p>
         </div>
       </Layout>
     );
@@ -280,14 +280,14 @@ const TakeTestPage = () => {
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button disabled={!allSaved || submitting}>
-                    {submitting ? "Submitting..." : "Submit test"}
+                    {submitting ? "Submitting..." : "Submit assessment"}
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle className="font-serif">Submit {testName}?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      We’ll score your gifts and team interests. You can take this test again later.
+                      We’ll score your gifts and team interests. You can take this assessment again later.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>

@@ -35,7 +35,7 @@ const Header = () => {
     { path: "/profile", label: "Profile", show: true },
     { path: "/dashboard", label: "Dashboard", show: canViewDashboard },
     { path: "/groups", label: "Groups", show: true },
-    { path: "/tests", label: "Tests", show: isAdmin },
+    { path: "/tests", label: "Assessments", show: isAdmin },
   ];
 
   const isCurrent = (path: string) =>

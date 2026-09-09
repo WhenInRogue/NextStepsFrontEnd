@@ -6,6 +6,7 @@ import type { TestPayload } from "@/types/test";
 import type { CategoryPayload, CategoryType } from "@/types/category";
 import type { QuestionPayload } from "@/types/question";
 import type { UserPayload } from "@/types/user";
+import { toUserFacingCopy } from "@/lib/utils";
 
 export default class ApiService {
   static BASE_URL = "http://localhost:5050/api";
@@ -393,7 +394,7 @@ export default class ApiService {
     if (!err?.response) {
       return `Couldn’t reach the NextSteps API at ${this.BASE_URL.replace(/\/api$/, "")}. Make sure the backend is running.`;
     }
-    return err.response?.data?.message || fallback;
+    return toUserFacingCopy(err.response?.data?.message || fallback);
   }
 
   static getErrorStatus(error: unknown): number | undefined {
