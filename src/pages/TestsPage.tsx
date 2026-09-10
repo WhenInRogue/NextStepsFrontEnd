@@ -99,7 +99,7 @@ const TestsPage = () => {
                     <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
                       {formatTestAudience(test.audience)}
                       {test.audience === "GROUPS"
-                        ? ` · ${groupCount === 1 ? "1 group" : `${groupCount} groups`}`
+                        ? ` · ${groupCount === 1 ? "1 team" : `${groupCount} teams`}`
                         : ""}
                       {created ? ` · Created ${created}` : ""}
                     </p>

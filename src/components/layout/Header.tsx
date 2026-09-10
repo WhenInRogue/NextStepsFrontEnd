@@ -34,7 +34,7 @@ const Header = () => {
   const links = [
     { path: "/profile", label: "Profile", show: true },
     { path: "/dashboard", label: "Dashboard", show: canViewDashboard },
-    { path: "/groups", label: "Groups", show: true },
+    { path: "/groups", label: "Teams", show: true },
     { path: "/tests", label: "Assessments", show: isAdmin },
   ];
 

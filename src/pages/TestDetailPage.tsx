@@ -179,7 +179,7 @@ const TestDetailPage = () => {
           {test.audience === "GROUPS" ? (
             <div className="mt-4 rounded-xl bg-sand/70 px-4 py-4">
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                Assigned groups
+                Assigned teams
               </p>
               {assignedGroups.length > 0 ? (
                 <ul className="mt-2 flex flex-wrap gap-2">
@@ -196,10 +196,10 @@ const TestDetailPage = () => {
                 </ul>
               ) : assignedIds.length > 0 ? (
                 <p className="mt-1 font-medium text-ink">
-                  {assignedIds.length === 1 ? "1 group assigned" : `${assignedIds.length} groups assigned`}
+                  {assignedIds.length === 1 ? "1 team assigned" : `${assignedIds.length} teams assigned`}
                 </p>
               ) : (
-                <p className="mt-1 text-sm text-muted-foreground">No groups assigned yet.</p>
+                <p className="mt-1 text-sm text-muted-foreground">No teams assigned yet.</p>
               )}
             </div>
           ) : null}

@@ -31,7 +31,7 @@ export function isTestActive(test: Pick<Test, "isActive">): boolean {
 }
 
 export function formatTestAudience(audience?: TestAudience): string {
-  if (audience === "GROUPS") return "Groups";
+  if (audience === "GROUPS") return "Teams";
   return "Everyone";
 }
 

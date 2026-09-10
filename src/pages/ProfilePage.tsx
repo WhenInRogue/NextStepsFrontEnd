@@ -99,12 +99,12 @@ const ProfilePage = () => {
           <section className="mt-8 rounded-2xl border border-border bg-card p-6 md:p-8">
             <div className="mb-6">
               <h2 className="font-serif text-2xl font-semibold text-ink">Your teams</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Groups you belong to, and the part you play.</p>
+              <p className="mt-1 text-sm text-muted-foreground">Teams you belong to, and the part you play.</p>
             </div>
             <ul className="space-y-3">
               {memberships.map((membership) => {
                 const groupId = membership.group?.groupId;
-                const name = membership.group?.name || `Group ${groupId ?? membership.groupMembershipId}`;
+                const name = membership.group?.name || `Team ${groupId ?? membership.groupMembershipId}`;
                 const active = isMembershipActive(membership);
                 const body = (
                   <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-sand/70 px-4 py-4">

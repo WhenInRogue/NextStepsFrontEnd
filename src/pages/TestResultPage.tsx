@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
-import CoastalScene from "@/components/brand/CoastalScene";
 import CategoryScoresSection from "@/components/tests/CategoryScoresSection";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -177,44 +176,36 @@ const TestResultPage = () => {
 
   return (
     <Layout>
-      <div className="animate-rise">
-        <p className="mb-4">
+      <div className="min-w-0 animate-rise overflow-x-hidden">
+        <p className="mb-6">
           <Link to={backTo} className="text-sm text-muted-foreground transition-colors hover:text-ink">
             ← {backLabel}
           </Link>
         </p>
 
-        <section className="relative overflow-hidden rounded-2xl">
-          <div className="relative h-44 md:h-56">
-            <CoastalScene className="absolute inset-0 h-full w-full" />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/15 to-transparent" />
-            <div className="absolute bottom-6 left-6 right-6 md:bottom-8 md:left-8">
-              <span className="inline-block rounded-full bg-sand/90 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-ink">
-                Results
-              </span>
-              <h1 className="mt-3 font-serif text-3xl font-semibold text-cream drop-shadow-sm md:text-4xl">{testName}</h1>
-              {completed ? <p className="mt-2 font-serif italic text-cream/85">Completed {completed}</p> : null}
-            </div>
-          </div>
-        </section>
-
-        <section className="mt-8 rounded-2xl border border-border bg-card p-6 md:p-8">
-          <h2 className="font-serif text-2xl font-semibold text-ink">{heading}</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Scores are the share of points earned in each spiritual gift and church team.
+        <header className="mb-8">
+          <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">Results</p>
+          <h1 className="mt-2 font-serif text-3xl font-semibold text-ink md:text-4xl">{heading}</h1>
+          <p className="mt-2 font-serif italic text-muted-foreground">
+            {testName}
+            {completed ? ` · Completed ${completed}` : ""}
           </p>
-          <CategoryScoresSection scores={scores} />
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild variant="outline">
-              <Link to={backTo}>{isOwn ? "Back to profile" : "Back"}</Link>
-            </Button>
-            {isOwn && testId ? (
-              <Button asChild>
-                <Link to={`/take/${testId}`}>Take again</Link>
-              </Button>
-            ) : null}
-          </div>
-        </section>
+        </header>
+
+        <CategoryScoresSection scores={scores} isOwn={isOwn} subjectName={testResult.user?.name} />
+
+        <div className="mt-8">
+          <Button asChild className="h-14 w-full rounded-full bg-[var(--color-ink)] text-base text-[var(--color-cream)] hover:opacity-90">
+            <Link to={backTo}>{isOwn ? "Return to your profile" : `Back to ${backLabel.toLowerCase()}`}</Link>
+          </Button>
+          {isOwn && testId ? (
+            <p className="mt-4 text-center">
+              <Link to={`/take/${testId}`} className="text-sm text-muted-foreground transition-colors hover:text-ink">
+                Take this assessment again
+              </Link>
+            </p>
+          ) : null}
+        </div>
       </div>
     </Layout>
   );

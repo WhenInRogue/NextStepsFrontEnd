@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import ApiService from "@/services/ApiService";
 import { isGroupActive, normalizeGroup, type Group, type GroupPayload } from "@/types/group";
+import { toUserFacingCopy } from "@/lib/utils";
 
 const GroupFormPage = () => {
   const { id } = useParams();
@@ -38,8 +39,8 @@ const GroupFormPage = () => {
       } catch (err) {
         const status = ApiService.getErrorStatus(err);
         toast({
-          title: status === 403 ? "Access denied" : "Group not found",
-          description: ApiService.getErrorMessage(err, "Failed to load group"),
+          title: status === 403 ? "Access denied" : "Team not found",
+          description: ApiService.getErrorMessage(err, "Failed to load team"),
           variant: "destructive",
         });
         navigate("/groups", { replace: true });
@@ -69,7 +70,7 @@ const GroupFormPage = () => {
     e.preventDefault();
     const trimmedName = name.trim();
     if (!trimmedName) {
-      setError("Group name is required");
+      setError("Team name is required");
       return;
     }
 
@@ -86,7 +87,7 @@ const GroupFormPage = () => {
         }
         const res = await ApiService.updateGroup(id, payload);
         const updated = res.group ? normalizeGroup(res.group) : { groupId: Number(id) };
-        toast({ title: "Group updated", description: res.message || "Group Updated Successfully" });
+        toast({ title: "Team updated", description: toUserFacingCopy(res.message || "Team updated successfully") });
         navigate(`/groups/${updated.groupId}`);
       } else {
         const payload: GroupPayload = { name: trimmedName, isActive };
@@ -94,11 +95,11 @@ const GroupFormPage = () => {
         if (trimmedDescription) payload.description = trimmedDescription;
         const res = await ApiService.createGroup(payload);
         const created = res.group ? normalizeGroup(res.group) : null;
-        toast({ title: "Group created", description: res.message || "Group Created Successfully" });
+        toast({ title: "Team created", description: toUserFacingCopy(res.message || "Team created successfully") });
         navigate(created?.groupId ? `/groups/${created.groupId}` : "/groups");
       }
     } catch (err) {
-      setError(ApiService.getErrorMessage(err, isEdit ? "Failed to update group" : "Failed to create group"));
+      setError(ApiService.getErrorMessage(err, isEdit ? "Failed to update team" : "Failed to create team"));
     } finally {
       setSaving(false);
     }
@@ -119,7 +120,7 @@ const GroupFormPage = () => {
       <div className="mx-auto max-w-xl animate-rise">
         <p className="mb-4">
           <Link to={backTo} className="text-sm text-muted-foreground transition-colors hover:text-ink">
-            ← {isEdit ? "Group" : "Groups"}
+            ← {isEdit ? "Team" : "Teams"}
           </Link>
         </p>
 
@@ -131,7 +132,7 @@ const GroupFormPage = () => {
               {isEdit ? "Update team" : "New team"}
             </p>
             <h1 className="mt-1 font-serif text-3xl font-semibold text-cream">
-              {isEdit ? "Edit group" : "Create a group"}
+              {isEdit ? "Edit team" : "Create a team"}
             </h1>
           </div>
         </div>
@@ -164,15 +165,15 @@ const GroupFormPage = () => {
           <div className="flex items-center justify-between gap-4 rounded-xl bg-sand/70 px-4 py-4">
             <div>
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Active</p>
-              <p className="mt-1 text-sm text-ink/70">Inactive groups are hidden from members.</p>
+              <p className="mt-1 text-sm text-ink/70">Inactive teams are hidden from members.</p>
             </div>
-            <Switch checked={isActive} onCheckedChange={setIsActive} aria-label="Group is active" />
+            <Switch checked={isActive} onCheckedChange={setIsActive} aria-label="Team is active" />
           </div>
 
           {error ? <p className="error-banner">{error}</p> : null}
 
           <Button type="submit" className="h-12 w-full text-lg" disabled={saving}>
-            {saving ? (isEdit ? "Saving..." : "Creating group...") : isEdit ? "Save changes" : "Create group"}
+            {saving ? (isEdit ? "Saving..." : "Creating team...") : isEdit ? "Save changes" : "Create team"}
           </Button>
         </form>
       </div>

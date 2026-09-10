@@ -39,7 +39,7 @@ import {
   type GroupPosition,
 } from "@/types/membership";
 import { extractUser, extractUsers, userLabel, type User } from "@/types/user";
-import { cn } from "@/lib/utils";
+import { cn, toUserFacingCopy } from "@/lib/utils";
 
 const selectTriggerClass =
   "h-12 rounded-xl border-input bg-sand px-4 text-base text-ink md:text-sm";
@@ -88,7 +88,7 @@ const GroupMembersSection = ({ group }: { group: Group }) => {
         setError(
           ApiService.getErrorMessage(
             err,
-            status === 403 ? "You do not have access to this group's members" : "Failed to load members",
+            status === 403 ? "You do not have access to this team's members" : "Failed to load members",
           ),
         );
       } finally {
@@ -179,7 +179,7 @@ const GroupMembersSection = ({ group }: { group: Group }) => {
     try {
       const res = await ApiService.addMember(group.groupId, { userId, position: addPosition });
       applyMembership(extractMembership(res));
-      toast({ title: "Member added", description: res.message || "Member added successfully" });
+      toast({ title: "Member added", description: toUserFacingCopy(res.message || "Member added successfully") });
       setAddOpen(false);
       setQuery("");
       setSelectedUserId("");
@@ -202,7 +202,7 @@ const GroupMembersSection = ({ group }: { group: Group }) => {
     try {
       const res = await ApiService.updateMembership(membership.groupMembershipId, { position });
       applyMembership(extractMembership(res));
-      toast({ title: "Membership updated", description: res.message || "Position saved" });
+      toast({ title: "Membership updated", description: toUserFacingCopy(res.message || "Position saved") });
     } catch (err) {
       toast({
         title: "Couldn’t update member",
@@ -219,7 +219,7 @@ const GroupMembersSection = ({ group }: { group: Group }) => {
     try {
       const res = await ApiService.updateMembership(membership.groupMembershipId, { isActive: true });
       applyMembership(extractMembership(res));
-      toast({ title: "Member restored", description: res.message || "Membership updated successfully" });
+      toast({ title: "Member restored", description: toUserFacingCopy(res.message || "Membership updated successfully") });
     } catch (err) {
       toast({
         title: "Couldn’t restore member",
@@ -245,7 +245,7 @@ const GroupMembersSection = ({ group }: { group: Group }) => {
           ),
         );
       });
-      toast({ title: "Member removed", description: res.message || "Member removed successfully" });
+      toast({ title: "Member removed", description: toUserFacingCopy(res.message || "Member removed successfully") });
     } catch (err) {
       toast({
         title: "Couldn’t remove member",
@@ -282,7 +282,7 @@ const GroupMembersSection = ({ group }: { group: Group }) => {
             }}
           >
             <DialogTrigger asChild>
-              <Button disabled={!groupIsActive} title={!groupIsActive ? "Cannot add members to an inactive group" : undefined}>
+              <Button disabled={!groupIsActive} title={!groupIsActive ? "Cannot add members to an inactive team" : undefined}>
                 Add member
               </Button>
             </DialogTrigger>
@@ -350,7 +350,7 @@ const GroupMembersSection = ({ group }: { group: Group }) => {
                 </div>
                 <DialogFooter>
                   <Button type="submit" className="w-full sm:w-auto" disabled={saving}>
-                    {saving ? "Adding..." : "Add to group"}
+                    {saving ? "Adding..." : "Add to team"}
                   </Button>
                 </DialogFooter>
               </form>
@@ -360,7 +360,7 @@ const GroupMembersSection = ({ group }: { group: Group }) => {
       </div>
 
       {!groupIsActive && canManage ? (
-        <p className="error-banner mb-6">This group is inactive, so new members can’t be added.</p>
+        <p className="error-banner mb-6">This team is inactive, so new members can’t be added.</p>
       ) : null}
 
       {error ? <p className="error-banner">{error}</p> : null}
@@ -451,7 +451,7 @@ const GroupMembersSection = ({ group }: { group: Group }) => {
                             <AlertDialogDescription>
                               They will no longer appear as a member of {group.name}. You can add them back later.
                               {removingSelfLeader
-                                ? " You are a leader of this group — removing yourself will take away permission to manage members."
+                                ? " You are a leader of this team — removing yourself will take away permission to manage members."
                                 : null}
                             </AlertDialogDescription>
                           </AlertDialogHeader>

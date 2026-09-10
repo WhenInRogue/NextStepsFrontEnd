@@ -19,6 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import ApiService from "@/services/ApiService";
 import { normalizeGroup, type Group } from "@/types/group";
 import GroupMembersSection from "@/components/groups/GroupMembersSection";
+import { toUserFacingCopy } from "@/lib/utils";
 
 const GroupDetailPage = () => {
   const { id } = useParams();
@@ -43,10 +44,10 @@ const GroupDetailPage = () => {
         const status = ApiService.getErrorStatus(err);
         const description = ApiService.getErrorMessage(
           err,
-          status === 403 ? "You do not have access to this group" : "Group not found",
+          status === 403 ? "You do not have access to this team" : "Team not found",
         );
         toast({
-          title: status === 403 ? "Access denied" : "Group not found",
+          title: status === 403 ? "Access denied" : "Team not found",
           description,
           variant: "destructive",
         });
@@ -64,12 +65,12 @@ const GroupDetailPage = () => {
     setDeleting(true);
     try {
       const res = await ApiService.deleteGroup(id);
-      toast({ title: "Group deleted", description: res.message || `${group.name} has been removed.` });
+      toast({ title: "Team deleted", description: toUserFacingCopy(res.message || `${group.name} has been removed.`) });
       navigate("/groups", { replace: true });
     } catch (err) {
       toast({
-        title: "Couldn’t delete group",
-        description: ApiService.getErrorMessage(err, "Failed to delete group"),
+        title: "Couldn’t delete team",
+        description: ApiService.getErrorMessage(err, "Failed to delete team"),
         variant: "destructive",
       });
     } finally {
@@ -96,7 +97,7 @@ const GroupDetailPage = () => {
       <div className="animate-rise">
         <p className="mb-4">
           <Link to="/groups" className="text-sm text-muted-foreground transition-colors hover:text-ink">
-            ← Groups
+            ← Teams
           </Link>
         </p>
 
@@ -123,7 +124,7 @@ const GroupDetailPage = () => {
         <section className="mt-8 rounded-2xl border border-border bg-card p-6 md:p-8">
           <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h2 className="font-serif text-2xl font-semibold text-ink">Group details</h2>
+              <h2 className="font-serif text-2xl font-semibold text-ink">Team details</h2>
               <p className="mt-1 text-sm text-muted-foreground">The particulars we keep for this team.</p>
             </div>
             {isAdmin ? (
@@ -141,7 +142,7 @@ const GroupDetailPage = () => {
                     <AlertDialogHeader>
                       <AlertDialogTitle className="font-serif">Delete {group.name}?</AlertDialogTitle>
                       <AlertDialogDescription>
-                        This permanently deletes the group and removes everyone from the team. This cannot be undone.
+                        This permanently deletes the team and removes everyone from it. This cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -150,7 +151,7 @@ const GroupDetailPage = () => {
                         className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                         onClick={handleDelete}
                       >
-                        Delete group
+                        Delete team
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>

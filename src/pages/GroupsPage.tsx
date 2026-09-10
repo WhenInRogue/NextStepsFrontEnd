@@ -21,7 +21,7 @@ const GroupsPage = () => {
         const list = Array.isArray(res.groups) ? res.groups.map(normalizeGroup) : [];
         setGroups(list);
       } catch (err) {
-        setError(ApiService.getErrorMessage(err, "Failed to load groups"));
+        setError(ApiService.getErrorMessage(err, "Failed to load teams"));
       } finally {
         setLoading(false);
       }
@@ -48,7 +48,7 @@ const GroupsPage = () => {
               <span className="inline-block rounded-full bg-sand/90 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-ink">
                 {isAdmin ? "All teams" : "Your teams"}
               </span>
-              <h1 className="mt-3 font-serif text-4xl font-semibold text-cream drop-shadow-sm md:text-5xl">Groups</h1>
+              <h1 className="mt-3 font-serif text-4xl font-semibold text-cream drop-shadow-sm md:text-5xl">Teams</h1>
               <p className="mt-2 max-w-xl text-sm text-cream/85">
                 {isAdmin
                   ? "Create and tend the church teams members can serve on."
@@ -64,7 +64,7 @@ const GroupsPage = () => {
           </p>
           {isAdmin ? (
             <Button asChild>
-              <Link to="/groups/new">New group</Link>
+              <Link to="/groups/new">New team</Link>
             </Button>
           ) : null}
         </div>
@@ -74,7 +74,7 @@ const GroupsPage = () => {
         {groups.length === 0 && !error ? (
           <section className="mt-6 rounded-2xl border border-border bg-card px-6 py-16 text-center">
             <h2 className="font-serif text-2xl font-semibold text-ink">
-              {isAdmin ? "No groups yet" : "You aren’t on any teams yet"}
+              {isAdmin ? "No teams yet" : "You aren’t on any teams yet"}
             </h2>
             <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
               {isAdmin
@@ -83,7 +83,7 @@ const GroupsPage = () => {
             </p>
             {isAdmin ? (
               <Button asChild className="mt-6">
-                <Link to="/groups/new">Create a group</Link>
+                <Link to="/groups/new">Create a team</Link>
               </Button>
             ) : null}
           </section>

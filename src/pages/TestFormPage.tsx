@@ -52,8 +52,8 @@ const TestFormPage = () => {
       } catch (err) {
         if (!cancelled) {
           toast({
-            title: "Couldn’t load groups",
-            description: ApiService.getErrorMessage(err, "Failed to load groups"),
+            title: "Couldn’t load teams",
+            description: ApiService.getErrorMessage(err, "Failed to load teams"),
             variant: "destructive",
           });
         }
@@ -129,7 +129,7 @@ const TestFormPage = () => {
       return;
     }
     if (audience === "GROUPS" && selectedGroupIds.length === 0) {
-      setError("Select at least one group, or make this assessment available to everyone.");
+      setError("Select at least one team, or make this assessment available to everyone.");
       return;
     }
 
@@ -248,7 +248,7 @@ const TestFormPage = () => {
               >
                 <RadioGroupItem value="GROUPS" id="audience-groups" className="mt-1" />
                 <span>
-                  <span className="block font-medium text-ink">Groups</span>
+                  <span className="block font-medium text-ink">Teams</span>
                   <span className="mt-1 block text-sm text-ink/70">Only members of selected teams.</span>
                 </span>
               </label>
@@ -257,10 +257,10 @@ const TestFormPage = () => {
 
           {audience === "GROUPS" ? (
             <div>
-              <p className="field-label">Assigned groups</p>
+              <p className="field-label">Assigned teams</p>
               {groups.length === 0 ? (
                 <p className="rounded-xl bg-sand/70 px-4 py-4 text-sm text-muted-foreground">
-                  No groups yet. Create a team first, then assign this assessment.
+                  No teams yet. Create a team first, then assign this assessment.
                 </p>
               ) : (
                 <ul className="max-h-56 space-y-1 overflow-y-auto rounded-xl bg-sand/70 p-2">
