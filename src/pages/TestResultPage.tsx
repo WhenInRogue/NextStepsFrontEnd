@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import CategoryScoresSection from "@/components/tests/CategoryScoresSection";
+import RetakeAssessmentDialog from "@/components/profile/RetakeAssessmentDialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import ApiService from "@/services/ApiService";
@@ -200,9 +201,15 @@ const TestResultPage = () => {
           </Button>
           {isOwn && testId ? (
             <p className="mt-4 text-center">
-              <Link to={`/take/${testId}`} className="text-sm text-muted-foreground transition-colors hover:text-ink">
-                Take this assessment again
-              </Link>
+              <RetakeAssessmentDialog
+                testId={testId}
+                testName={testName}
+                trigger={
+                  <button type="button" className="text-sm text-muted-foreground transition-colors hover:text-ink">
+                    Take this assessment again
+                  </button>
+                }
+              />
             </p>
           ) : null}
         </div>

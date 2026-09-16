@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import RetakeAssessmentDialog from "@/components/profile/RetakeAssessmentDialog";
 import ApiService from "@/services/ApiService";
 import { extractTests, isTestActive, type Test } from "@/types/test";
 import {
@@ -65,6 +66,7 @@ const AssessmentsSection = () => {
             const completed = latestCompletedResultForTest(results, test.id);
             const hasCompleted = hasCompletedTest(results, test.id);
             const actionLabel = incomplete ? "Continue" : hasCompleted ? "Take again" : "Take assessment";
+            const isRetake = hasCompleted && !incomplete;
             const completedLabel = formatCompletedAt(completed?.completedAt);
             return (
               <li key={test.id} className="rounded-xl bg-sand/70 px-4 py-4">
@@ -98,9 +100,17 @@ const AssessmentsSection = () => {
                         <Link to={`/results/${completed.testResultId}`}>View results</Link>
                       </Button>
                     ) : null}
-                    <Button asChild>
-                      <Link to={`/take/${test.id}`}>{actionLabel}</Link>
-                    </Button>
+                    {isRetake ? (
+                      <RetakeAssessmentDialog
+                        testId={test.id}
+                        testName={test.name}
+                        trigger={<Button>Take again</Button>}
+                      />
+                    ) : (
+                      <Button asChild>
+                        <Link to={`/take/${test.id}`}>{actionLabel}</Link>
+                      </Button>
+                    )}
                   </div>
                 </div>
               </li>
