@@ -6,6 +6,7 @@ import type { TestPayload } from "@/types/test";
 import type { CategoryPayload, CategoryType } from "@/types/category";
 import type { QuestionPayload } from "@/types/question";
 import type { UserPayload } from "@/types/user";
+import type { AnswerPayload } from "@/types/answer";
 import { toUserFacingCopy } from "@/lib/utils";
 
 export default class ApiService {
@@ -113,7 +114,7 @@ export default class ApiService {
 
   static async deleteUser(userId: string) {
     const response = await axios.delete(
-      `${this.BASE_URL}/users/update/${userId}`,
+      `${this.BASE_URL}/users/delete/${userId}`,
       {
         headers: this.getHeader(),
       }
