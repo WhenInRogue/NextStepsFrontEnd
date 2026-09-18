@@ -9,7 +9,7 @@ interface BrandMarkProps {
 
 const Mark = ({ subtitle, className }: Omit<BrandMarkProps, "to">) => (
   <div className={cn("flex items-center gap-3", className)}>
-    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ochre text-ink">
+    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-azure text-cream">
       <span className="font-serif text-2xl font-semibold leading-none">n</span>
     </div>
     <div className="leading-tight">

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
-import CoastalScene from "@/components/brand/CoastalScene";
+import BrandHero from "@/components/brand/BrandHero";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -183,7 +183,7 @@ const TestFormPage = () => {
         </p>
 
         <div className="relative mb-8 h-44 overflow-hidden rounded-2xl">
-          <CoastalScene className="absolute inset-0 h-full w-full" />
+          <BrandHero className="absolute inset-0 h-full w-full" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink/50 via-transparent to-transparent" />
           <div className="absolute bottom-5 left-6">
             <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-cream/80">

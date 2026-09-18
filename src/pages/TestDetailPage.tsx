@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
-import CoastalScene from "@/components/brand/CoastalScene";
+import BrandHero from "@/components/brand/BrandHero";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -110,7 +110,7 @@ const TestDetailPage = () => {
 
         <section className="relative overflow-hidden rounded-2xl">
           <div className="relative h-56 md:h-72">
-            <CoastalScene className="absolute inset-0 h-full w-full" />
+            <BrandHero className="absolute inset-0 h-full w-full" />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/15 to-transparent" />
             <div className="absolute bottom-6 left-6 right-6 md:bottom-8 md:left-8">
               <div className="flex flex-wrap gap-2">

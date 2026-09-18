@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import BrandMark from "@/components/brand/BrandMark";
-import CoastalScene from "@/components/brand/CoastalScene";
+import BrandHero from "@/components/brand/BrandHero";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -47,21 +47,14 @@ const RegisterPage = () => {
   return (
     <div className="grid min-h-screen bg-background lg:grid-cols-2">
       <section className="relative min-h-[38vh] overflow-hidden lg:min-h-screen">
-        <CoastalScene className="absolute inset-0 h-full w-full" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-ink/10 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
-          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-cream/80">NextSteps</p>
-          <h1 className="mt-3 max-w-md font-serif text-4xl font-semibold leading-tight text-cream drop-shadow-sm md:text-5xl">
-            Discover your gifts. Find your place to serve.
-          </h1>
-        </div>
+        <BrandHero className="absolute inset-0 h-full w-full" crop="poster" priority />
       </section>
 
       <section className="flex items-center justify-center px-6 py-12 md:px-12">
         <div className="w-full max-w-[420px] animate-rise">
           <BrandMark subtitle="New Life St Louis" />
 
-          <h2 className="mt-12 font-serif text-4xl font-semibold text-ink md:text-[2.75rem]">Create an account</h2>
+          <h1 className="mt-12 font-serif text-4xl font-semibold text-ink md:text-[2.75rem]">Create an account</h1>
           <p className="mt-3 text-sm text-ink/70">Join NextSteps to take assessments and find where you can serve.</p>
 
           <form onSubmit={handleRegister} className="mt-10 space-y-5">

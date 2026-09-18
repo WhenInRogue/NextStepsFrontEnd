@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
-import CoastalScene from "@/components/brand/CoastalScene";
+import BrandHero from "@/components/brand/BrandHero";
 import GroupStatusBadge from "@/components/groups/GroupStatusBadge";
 import { Button } from "@/components/ui/button";
 import ApiService from "@/services/ApiService";
@@ -42,7 +42,7 @@ const GroupsPage = () => {
       <div className="animate-rise">
         <section className="relative overflow-hidden rounded-2xl">
           <div className="relative h-48 md:h-56">
-            <CoastalScene className="absolute inset-0 h-full w-full" />
+            <BrandHero className="absolute inset-0 h-full w-full" />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/15 to-transparent" />
             <div className="absolute bottom-6 left-6 right-6 md:bottom-8 md:left-8">
               <span className="inline-block rounded-full bg-sand/90 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-ink">

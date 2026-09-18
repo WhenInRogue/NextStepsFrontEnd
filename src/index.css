@@ -6,15 +6,15 @@
   :root {
     --radius: 0.75rem;
 
-    /* Riviera palette (oklch channels for Tailwind opacity) */
-    --cream: 0.937 0.035 92;
-    --cream2: 0.912 0.045 92;
-    --ink: 0.36 0.07 268;
-    --azure: 0.56 0.1 236;
-    --azure2: 0.7 0.075 224;
-    --ochre: 0.76 0.135 82;
-    --terra: 0.59 0.15 38;
-    --sand: 0.89 0.06 90;
+    /* Next Steps poster palette (oklch channels for Tailwind opacity) */
+    --cream: 0.952 0.017 76;
+    --cream2: 0.928 0.018 70;
+    --ink: 0.32 0.04 296;
+    --azure: 0.488 0.151 296;
+    --azure2: 0.738 0.06 305;
+    --ochre: 0.78 0.07 300;
+    --terra: 0.42 0.13 298;
+    --sand: 0.91 0.014 55;
 
     --background: var(--cream);
     --foreground: var(--ink);
@@ -22,12 +22,12 @@
     --card-foreground: var(--ink);
     --popover: var(--cream2);
     --popover-foreground: var(--ink);
-    --primary: var(--ink);
+    --primary: var(--azure);
     --primary-foreground: var(--cream);
     --secondary: var(--cream2);
     --secondary-foreground: var(--ink);
     --muted: var(--cream2);
-    --muted-foreground: 0.5 0.05 262;
+    --muted-foreground: 0.5 0.03 296;
     --accent: var(--ochre);
     --accent-foreground: var(--ink);
     --destructive: 0.55 0.19 27;
@@ -36,27 +36,27 @@
     --success-foreground: var(--cream);
     --warning: var(--ochre);
     --warning-foreground: var(--ink);
-    --border: 0.36 0.07 268;
-    --input: 0.36 0.07 268;
-    --ring: var(--terra);
+    --border: 0.32 0.04 296;
+    --input: 0.32 0.04 296;
+    --ring: var(--azure);
     --sidebar-background: var(--cream2);
     --sidebar-foreground: var(--ink);
-    --sidebar-primary: var(--ink);
+    --sidebar-primary: var(--azure);
     --sidebar-primary-foreground: var(--cream);
     --sidebar-accent: var(--ochre);
     --sidebar-accent-foreground: var(--ink);
-    --sidebar-border: 0.36 0.07 268;
-    --sidebar-ring: var(--terra);
+    --sidebar-border: 0.32 0.04 296;
+    --sidebar-ring: var(--azure);
 
     /* Full colors for SVG / raw CSS */
-    --color-cream: oklch(0.937 0.035 92);
-    --color-cream2: oklch(0.912 0.045 92);
-    --color-ink: oklch(0.36 0.07 268);
-    --color-azure: oklch(0.56 0.1 236);
-    --color-azure2: oklch(0.7 0.075 224);
-    --color-ochre: oklch(0.76 0.135 82);
-    --color-terra: oklch(0.59 0.15 38);
-    --color-sand: oklch(0.89 0.06 90);
+    --color-cream: oklch(0.952 0.017 76);
+    --color-cream2: oklch(0.928 0.018 70);
+    --color-ink: oklch(0.32 0.04 296);
+    --color-azure: oklch(0.488 0.151 296);
+    --color-azure2: oklch(0.738 0.06 305);
+    --color-ochre: oklch(0.78 0.07 300);
+    --color-terra: oklch(0.42 0.13 298);
+    --color-sand: oklch(0.91 0.014 55);
   }
 
   * {
@@ -86,7 +86,7 @@
   }
 
   .error-banner {
-    @apply rounded-xl border border-terra/40 bg-terra/10 px-4 py-3 text-sm text-terra;
+    @apply rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive;
   }
 }
 

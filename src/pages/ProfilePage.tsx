@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import ApiService from "@/services/ApiService";
 import { useToast } from "@/hooks/use-toast";
-import CoastalScene from "@/components/brand/CoastalScene";
+import BrandHero from "@/components/brand/BrandHero";
 import { extractUser, type User } from "@/types/user";
 import {
   extractMemberships,
@@ -60,7 +60,7 @@ const ProfilePage = () => {
       <div className="animate-rise">
         <section className="relative overflow-hidden rounded-2xl">
           <div className="relative h-56 md:h-72">
-            <CoastalScene className="absolute inset-0 h-full w-full" />
+            <BrandHero className="absolute inset-0 h-full w-full" />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/15 to-transparent" />
             <div className="absolute bottom-6 left-6 right-6 md:bottom-8 md:left-8">
               <span className="inline-block rounded-full bg-sand/90 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.18em] text-ink">
