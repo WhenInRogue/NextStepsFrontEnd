@@ -292,7 +292,7 @@ function scoreKey(score: CategoryScore, index: number) {
 }
 
 function presenceClass(presence: GiftPresence) {
-  if (presence === "leading") return "text-terra";
+  if (presence === "leading") return "text-[var(--color-gold)]";
   if (presence === "growing") return "text-azure";
   return "text-muted-foreground";
 }

@@ -25,6 +25,7 @@ export default {
         azure2: "oklch(var(--azure2) / <alpha-value>)",
         ochre: "oklch(var(--ochre) / <alpha-value>)",
         terra: "oklch(var(--terra) / <alpha-value>)",
+        gold: "oklch(var(--gold) / <alpha-value>)",
         sand: "oklch(var(--sand) / <alpha-value>)",
         border: "oklch(var(--border) / 0.12)",
         input: "oklch(var(--input) / 0.20)",

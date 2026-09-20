@@ -14,6 +14,7 @@
     --azure2: 0.738 0.06 305;
     --ochre: 0.78 0.07 300;
     --terra: 0.42 0.13 298;
+    --gold: 0.72 0.145 82;
     --sand: 0.91 0.014 55;
 
     --background: var(--cream);
@@ -56,6 +57,7 @@
     --color-azure2: oklch(0.738 0.06 305);
     --color-ochre: oklch(0.78 0.07 300);
     --color-terra: oklch(0.42 0.13 298);
+    --color-gold: oklch(0.72 0.145 82);
     --color-sand: oklch(0.91 0.014 55);
   }
 
