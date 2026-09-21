@@ -80,6 +80,50 @@ export default class ApiService {
     return response.data;
   }
 
+  private static verifyEmailRequests = new Map<string, Promise<{ message?: string; status?: number }>>();
+
+  static async verifyEmail(token: string) {
+    const key = token.trim();
+    const existing = this.verifyEmailRequests.get(key);
+    if (existing) return existing;
+
+    const request = axios
+      .post(`${this.BASE_URL}/auth/verify-email`, { token: key })
+      .then((response) => response.data as { message?: string; status?: number })
+      .catch((error) => {
+        this.verifyEmailRequests.delete(key);
+        throw error;
+      });
+
+    this.verifyEmailRequests.set(key, request);
+    return request;
+  }
+
+  static async resendVerification(email: string) {
+    const response = await axios.post(`${this.BASE_URL}/auth/resend-verification`, { email });
+    return response.data;
+  }
+
+  static async forgotPassword(email: string) {
+    const response = await axios.post(`${this.BASE_URL}/auth/forgot-password`, { email });
+    return response.data;
+  }
+
+  static async resetPassword(token: string, newPassword: string) {
+    const response = await axios.post(`${this.BASE_URL}/auth/reset-password`, {
+      token,
+      newPassword,
+    });
+    return response.data;
+  }
+
+  static isUnverifiedEmailError(error: unknown): boolean {
+    const message = String(
+      (error as { response?: { data?: { message?: string } } })?.response?.data?.message ?? "",
+    ).toLowerCase();
+    return message.includes("verify your email");
+  }
+
   static async getAllUsers() {
     const response = await axios.get(`${this.BASE_URL}/users/all`, {
       headers: this.getHeader(),

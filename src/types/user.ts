@@ -7,6 +7,7 @@ export type User = {
   email?: string;
   phoneNumber?: string;
   role?: UserRole;
+  emailVerified?: boolean;
   createdAt?: string;
 };
 
@@ -39,6 +40,12 @@ export function normalizeUser(raw: unknown): User {
           ? value.phoneNumber
           : undefined,
     role: typeof nested.role === "string" ? nested.role.toUpperCase() : typeof value.role === "string" ? value.role.toUpperCase() : undefined,
+    emailVerified:
+      typeof nested.emailVerified === "boolean"
+        ? nested.emailVerified
+        : typeof value.emailVerified === "boolean"
+          ? value.emailVerified
+          : undefined,
     createdAt:
       typeof nested.createdAt === "string"
         ? nested.createdAt
