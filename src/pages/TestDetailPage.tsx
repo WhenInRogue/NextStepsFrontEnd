@@ -2,18 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import BrandHero from "@/components/brand/BrandHero";
+import TypeToDeleteDialog from "@/components/common/TypeToDeleteDialog";
 import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import ApiService from "@/services/ApiService";
 import { assignedGroupIds, extractTest, formatTestAudience, formatTestCreatedAt, type Test } from "@/types/test";
@@ -28,6 +18,7 @@ const TestDetailPage = () => {
   const [test, setTest] = useState<Test | null>(null);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   useEffect(() => {
     if (!id) {
@@ -139,31 +130,9 @@ const TestDetailPage = () => {
               <Button asChild variant="outline">
                 <Link to={`/tests/${test.id}/edit`}>Edit</Link>
               </Button>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="destructive" disabled={deleting}>
-                    Delete
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle className="font-serif">Delete {test.name}?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This permanently deletes the assessment, all of its questions, and every result anyone has submitted.
-                      This cannot be undone.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                      onClick={handleDelete}
-                    >
-                      Delete assessment
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <Button type="button" variant="destructive" disabled={deleting} onClick={() => setDeleteOpen(true)}>
+                Delete
+              </Button>
             </div>
           </div>
           <dl className="grid gap-4 sm:grid-cols-2">
@@ -206,6 +175,16 @@ const TestDetailPage = () => {
         </section>
 
         <QuestionsSection test={test} />
+
+        <TypeToDeleteDialog
+          open={deleteOpen}
+          onOpenChange={setDeleteOpen}
+          title={`Delete ${test.name}?`}
+          description="This permanently deletes the assessment, all of its questions, and every result anyone has submitted. This cannot be undone."
+          confirmLabel="Delete assessment"
+          pending={deleting}
+          onConfirm={handleDelete}
+        />
       </div>
     </Layout>
   );

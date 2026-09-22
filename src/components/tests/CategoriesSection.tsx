@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import TypeToDeleteDialog from "@/components/common/TypeToDeleteDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,17 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import ApiService from "@/services/ApiService";
@@ -55,6 +45,7 @@ const CategoriesSection = () => {
   const [formError, setFormError] = useState("");
   const [saving, setSaving] = useState(false);
   const [pendingId, setPendingId] = useState<number | null>(null);
+  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
 
   const load = async () => {
     const res = await ApiService.getAllCategories();
@@ -176,6 +167,7 @@ const CategoriesSection = () => {
       const res = await ApiService.deleteCategory(category.categoryId);
       setCategories((prev) => prev.filter((item) => item.categoryId !== category.categoryId));
       toast({ title: "Category deleted", description: toUserFacingCopy(res.message || "Category deleted successfully") });
+      setCategoryToDelete(null);
     } catch (err) {
       toast({
         title: "Couldn’t delete category",
@@ -309,33 +301,9 @@ const CategoriesSection = () => {
                             <Button variant="outline" size="sm" onClick={() => openEdit(category)}>
                               Edit
                             </Button>
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button variant="outline" size="sm" disabled={busy}>
-                                  Delete
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle className="font-serif">
-                                    Delete {category.categoryName}?
-                                  </AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    This permanently deletes the category, every question linked to it, and all scores
-                                    from submitted assessments. This cannot be undone.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                    onClick={() => handleDelete(category)}
-                                  >
-                                    Delete category
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
+                            <Button variant="outline" size="sm" disabled={busy} onClick={() => setCategoryToDelete(category)}>
+                              Delete
+                            </Button>
                           </div>
                         </div>
                       </li>
@@ -347,6 +315,18 @@ const CategoriesSection = () => {
           ))}
         </div>
       )}
+
+      <TypeToDeleteDialog
+        open={categoryToDelete != null}
+        onOpenChange={(open) => {
+          if (!open) setCategoryToDelete(null);
+        }}
+        title={`Delete ${categoryToDelete?.categoryName || "this category"}?`}
+        description="This permanently deletes the category, every question linked to it, and all scores from submitted assessments. This cannot be undone."
+        confirmLabel="Delete category"
+        pending={pendingId === categoryToDelete?.categoryId}
+        onConfirm={() => (categoryToDelete ? handleDelete(categoryToDelete) : undefined)}
+      />
     </section>
   );
 };

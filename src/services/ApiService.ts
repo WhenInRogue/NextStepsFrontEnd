@@ -156,7 +156,7 @@ export default class ApiService {
     return response.data;
   }
 
-  static async deleteUser(userId: string) {
+  static async deleteUser(userId: string | number) {
     const response = await axios.delete(
       `${this.BASE_URL}/users/delete/${userId}`,
       {

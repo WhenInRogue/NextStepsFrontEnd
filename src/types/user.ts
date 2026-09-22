@@ -1,5 +1,8 @@
+import { normalizeDateTime } from "@/types/test";
+
 export const USER_ROLES = ["MEMBER", "DREAM_TEAM_LEADER", "ADMIN"] as const;
 export type UserRole = (typeof USER_ROLES)[number] | string;
+export type UserSort = "recent" | "oldest";
 
 export type User = {
   id: number;
@@ -46,12 +49,9 @@ export function normalizeUser(raw: unknown): User {
         : typeof value.emailVerified === "boolean"
           ? value.emailVerified
           : undefined,
-    createdAt:
-      typeof nested.createdAt === "string"
-        ? nested.createdAt
-        : typeof value.createdAt === "string"
-          ? value.createdAt
-          : undefined,
+    createdAt: normalizeDateTime(
+      nested.createdAt ?? nested.created_at ?? value.createdAt ?? value.created_at,
+    ),
   };
 }
 
@@ -84,7 +84,62 @@ export function formatUserRole(role?: string): string {
 }
 
 export function sortUsers(users: User[]): User[] {
-  return [...users].sort(
-    (a, b) => a.name.localeCompare(b.name) || (a.email || "").localeCompare(b.email || "") || a.id - b.id,
-  );
+  return [...users].sort(compareUsersByName);
+}
+
+export function sortUsersByCreatedAt(users: User[], direction: UserSort): User[] {
+  const newestFirst = direction === "recent";
+  return [...users].sort((a, b) => {
+    const aTime = createdAtTime(a.createdAt);
+    const bTime = createdAtTime(b.createdAt);
+    const aOk = aTime != null;
+    const bOk = bTime != null;
+    if (aOk && bOk && aTime !== bTime) return newestFirst ? bTime - aTime : aTime - bTime;
+    if (aOk !== bOk) return aOk ? -1 : 1;
+    return compareUsersByName(a, b);
+  });
+}
+
+export function formatUserCreatedAt(createdAt?: string): string | undefined {
+  if (!createdAt) return undefined;
+  const date = new Date(createdAt);
+  if (Number.isNaN(date.getTime())) return createdAt;
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+function toLocalDateKey(value?: string): string | undefined {
+  if (!value) return undefined;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return undefined;
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+export function userMatchesJoinedRange(user: Pick<User, "createdAt">, from?: string, to?: string): boolean {
+  const start = from?.trim() ?? "";
+  const end = to?.trim() ?? "";
+  if (!start && !end) return true;
+  const key = toLocalDateKey(user.createdAt);
+  if (!key) return false;
+  const lo = start && end && start > end ? end : start;
+  const hi = start && end && start > end ? start : end;
+  if (lo && key < lo) return false;
+  if (hi && key > hi) return false;
+  return true;
+}
+
+function compareUsersByName(a: User, b: User): number {
+  return a.name.localeCompare(b.name) || (a.email || "").localeCompare(b.email || "") || a.id - b.id;
+}
+
+function createdAtTime(createdAt?: string): number | null {
+  if (!createdAt) return null;
+  const time = new Date(createdAt).getTime();
+  return Number.isFinite(time) ? time : null;
 }
