@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import PaginationComponent from "@/components/common/PaginationComponent";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -41,6 +42,7 @@ import {
 import { extractUser, extractUsers, userLabel, type User } from "@/types/user";
 import { cn, toUserFacingCopy } from "@/lib/utils";
 
+const PAGE_SIZE = 25;
 const selectTriggerClass =
   "h-12 rounded-xl border-input bg-sand px-4 text-base text-ink md:text-sm";
 
@@ -63,6 +65,8 @@ const GroupMembersSection = ({ group }: { group: Group }) => {
   const [addPosition, setAddPosition] = useState<GroupPosition>("MEMBER");
   const [saving, setSaving] = useState(false);
   const [pendingId, setPendingId] = useState<number | null>(null);
+  const [page, setPage] = useState(1);
+  const listRef = useRef<HTMLHeadingElement>(null);
 
   const loadMembers = async () => {
     const res = await ApiService.getMembersByGroup(group.groupId);
@@ -258,14 +262,33 @@ const GroupMembersSection = ({ group }: { group: Group }) => {
   };
 
   const activeCount = members.filter(isMembershipActive).length;
+  const totalPages = Math.max(1, Math.ceil(members.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+
+  useEffect(() => {
+    setPage((current) => Math.min(current, totalPages));
+  }, [totalPages]);
+
+  const pageStart = members.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE;
+  const pageItems = members.slice(pageStart, pageStart + PAGE_SIZE);
+  const rangeStart = members.length === 0 ? 0 : pageStart + 1;
+  const rangeEnd = pageStart + pageItems.length;
+
+  const handlePageChange = (nextPage: number) => {
+    setPage(nextPage);
+    listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <section className="mt-8 rounded-2xl border border-border bg-card p-6 md:p-8">
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="font-serif text-2xl font-semibold text-ink">Members</h2>
+          <h2 ref={listRef} className="font-serif text-2xl font-semibold text-ink">Members</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            {loading ? "Loading this team’s people…" : `${activeCount} active ${activeCount === 1 ? "member" : "members"}`}
+            {loading
+              ? "Loading this team’s people…"
+              : `${activeCount} active ${activeCount === 1 ? "member" : "members"}`}
+            {!loading && members.length > PAGE_SIZE ? ` · ${rangeStart}–${rangeEnd}` : ""}
           </p>
         </div>
         {canManage ? (
@@ -372,8 +395,9 @@ const GroupMembersSection = ({ group }: { group: Group }) => {
           {canManage ? "No members yet. Add the first person to this team." : "No members to show."}
         </p>
       ) : (
-        <ul className="space-y-3">
-          {members.map((membership) => {
+        <>
+          <ul className="space-y-3">
+          {pageItems.map((membership) => {
             const active = isMembershipActive(membership);
             const isSelf = currentUser != null && membershipUserId(membership) === currentUser.id;
             const removingSelfLeader = isSelf && membership.position === "LEADER";
@@ -472,7 +496,11 @@ const GroupMembersSection = ({ group }: { group: Group }) => {
               </li>
             );
           })}
-        </ul>
+          </ul>
+          {totalPages > 1 ? (
+            <PaginationComponent currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+          ) : null}
+        </>
       )}
     </section>
   );
