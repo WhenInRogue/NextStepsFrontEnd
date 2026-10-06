@@ -5,6 +5,14 @@ import BrandHero from "@/components/brand/BrandHero";
 import PaginationComponent from "@/components/common/PaginationComponent";
 import TypeToDeleteDialog from "@/components/common/TypeToDeleteDialog";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
@@ -20,11 +28,13 @@ import {
   userMatchesJoinedRange,
   USER_ROLES,
   type User,
+  type UserPayload,
   type UserRole,
   type UserSort,
 } from "@/types/user";
 
 const PAGE_SIZE = 25;
+const EMAIL_PATTERN = /.+@.+\..+/;
 const selectTriggerClass = "h-10 w-[200px] rounded-xl bg-sand text-ink";
 const filterSelectClass = "h-12 w-full rounded-xl bg-sand text-ink";
 
@@ -43,6 +53,10 @@ const DashboardPage = () => {
   const [error, setError] = useState("");
   const [pendingId, setPendingId] = useState<number | null>(null);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [userToEdit, setUserToEdit] = useState<User | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editError, setEditError] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -131,6 +145,62 @@ const DashboardPage = () => {
     setUserToDelete(null);
   };
 
+  const openEditDialog = (user: User) => {
+    setUserToEdit(user);
+    setEditName(user.name);
+    setEditEmail(user.email ?? "");
+    setEditError("");
+  };
+
+  const closeEditDialog = () => {
+    setUserToEdit(null);
+    setEditName("");
+    setEditEmail("");
+    setEditError("");
+  };
+
+  const handleSaveUser = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!userToEdit) return;
+
+    const name = editName.trim();
+    const email = editEmail.trim();
+    if (!name) {
+      setEditError("Name is required.");
+      return;
+    }
+    if (!EMAIL_PATTERN.test(email)) {
+      setEditError("Enter a valid email.");
+      return;
+    }
+
+    const payload: UserPayload = {};
+    if (name !== userToEdit.name.trim()) payload.name = name;
+    if (email !== (userToEdit.email ?? "").trim()) payload.email = email;
+    if (!payload.name && !payload.email) {
+      toast({ title: "No changes", description: "Nothing to update." });
+      closeEditDialog();
+      return;
+    }
+
+    setPendingId(userToEdit.id);
+    setEditError("");
+    try {
+      const res = await ApiService.updateUser(userToEdit.id, payload);
+      const editedId = userToEdit.id;
+      setUsers((prev) => prev.map((item) => (item.id === editedId ? mergeUpdatedUser(item, name, email, res) : item)));
+      toast({
+        title: "Person updated",
+        description: res.message || `${name} was updated.`,
+      });
+      closeEditDialog();
+    } catch (err) {
+      setEditError(ApiService.getErrorMessage(err, "Failed to update user"));
+    } finally {
+      setPendingId(null);
+    }
+  };
+
   const handleDeleteUser = async () => {
     if (!userToDelete) return;
     if (currentUserId != null && userToDelete.id === currentUserId) return;
@@ -176,7 +246,7 @@ const DashboardPage = () => {
               <h1 className="mt-3 font-serif text-4xl font-semibold text-cream drop-shadow-sm md:text-5xl">Dashboard</h1>
               <p className="mt-2 max-w-xl text-sm text-cream/85">
                 {isAdmin
-                  ? "View results, and promote people to dream team leader or admin."
+                  ? "View results, update names and emails, and promote people to dream team leader or admin."
                   : "Every member, and the latest gifts and team interests they have submitted."}
               </p>
             </div>
@@ -304,6 +374,17 @@ const DashboardPage = () => {
                         {joined ? <p className="mt-1 text-sm text-muted-foreground">Joined {joined}</p> : null}
                       </div>
                       <div className="flex shrink-0 flex-wrap items-center gap-2">
+                        {isAdmin ? (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            disabled={pendingId === user.id}
+                            aria-label={`Edit ${user.name || "user"}`}
+                            onClick={() => openEditDialog(user)}
+                          >
+                            Edit
+                          </Button>
+                        ) : null}
                         {canEditRole ? (
                           <Select
                             value={roleValue}
@@ -350,6 +431,67 @@ const DashboardPage = () => {
           </>
         )}
 
+        <Dialog
+          open={userToEdit != null}
+          onOpenChange={(open) => {
+            if (!open && userToEdit != null && pendingId === userToEdit.id) return;
+            if (!open) closeEditDialog();
+          }}
+        >
+          <DialogContent className="rounded-2xl sm:max-w-md">
+            <form onSubmit={handleSaveUser}>
+              <DialogHeader>
+                <DialogTitle className="font-serif text-2xl">Edit {userToEdit?.name || "person"}</DialogTitle>
+                <DialogDescription>Update the name or email on this account.</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div>
+                  <label htmlFor="edit-user-name" className="field-label">
+                    Name
+                  </label>
+                  <Input
+                    id="edit-user-name"
+                    value={editName}
+                    onChange={(event) => setEditName(event.target.value)}
+                    autoComplete="name"
+                    required
+                    disabled={userToEdit != null && pendingId === userToEdit.id}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="edit-user-email" className="field-label">
+                    Email
+                  </label>
+                  <Input
+                    id="edit-user-email"
+                    type="email"
+                    value={editEmail}
+                    onChange={(event) => setEditEmail(event.target.value)}
+                    autoComplete="email"
+                    pattern=".+@.+\..+"
+                    required
+                    disabled={userToEdit != null && pendingId === userToEdit.id}
+                  />
+                </div>
+                {editError ? <p className="error-banner">{editError}</p> : null}
+              </div>
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={closeEditDialog}
+                  disabled={userToEdit != null && pendingId === userToEdit.id}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={userToEdit != null && pendingId === userToEdit.id}>
+                  {userToEdit != null && pendingId === userToEdit.id ? "Saving…" : "Save changes"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+
         <TypeToDeleteDialog
           open={userToDelete != null}
           onOpenChange={(open) => {
@@ -364,5 +506,20 @@ const DashboardPage = () => {
     </Layout>
   );
 };
+
+function mergeUpdatedUser(current: User, name: string, email: string, res: unknown): User {
+  const updated = extractUser(res);
+  if (!Number.isFinite(updated.id) || updated.id !== current.id) {
+    return { ...current, name, email };
+  }
+  return {
+    ...current,
+    ...updated,
+    id: current.id,
+    name: updated.name || name,
+    email: updated.email ?? email,
+    role: updated.role ?? current.role,
+  };
+}
 
 export default DashboardPage;

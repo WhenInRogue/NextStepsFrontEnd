@@ -3,7 +3,6 @@ import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
-  averagePercentage,
   giftPresence,
   giftPresenceLabel,
   roundedPercentage,
@@ -53,7 +52,6 @@ const CategoryScoresSection = ({
     return <p className="rounded-3xl bg-card px-4 py-10 text-center text-sm text-muted-foreground">{emptyMessage}</p>;
   }
 
-  const overall = averagePercentage(gifts.length > 0 ? gifts : scores);
   const bestTeam = teams[0];
   const guidance = giftGuidance(gifts, isOwn);
   const teamCopy = bestTeam ? teamGuidance(bestTeam, isOwn) : undefined;
@@ -65,16 +63,10 @@ const CategoryScoresSection = ({
       {gifts.length > 0 ? (
         <div className="grid min-w-0 gap-6 overflow-hidden lg:grid-cols-2">
           <section className={panelClass}>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-              <div className="min-w-0">
-                <h2 className="font-serif text-xl font-semibold text-ink sm:text-2xl md:text-[1.7rem]">{glanceTitle}</h2>
-                <p className="mt-1 font-serif italic text-muted-foreground">
-                  Across {gifts.length} spiritual gift{gifts.length === 1 ? "" : "s"}
-                </p>
-              </div>
-              <p className="font-serif leading-none text-terra">
-                <span className="text-3xl font-semibold sm:text-4xl">{overall}</span>
-                <span className="text-base text-terra/70 sm:text-lg">/100</span>
+            <div className="min-w-0">
+              <h2 className="font-serif text-xl font-semibold text-ink sm:text-2xl md:text-[1.7rem]">{glanceTitle}</h2>
+              <p className="mt-1 font-serif italic text-muted-foreground">
+                Across {gifts.length} spiritual gift{gifts.length === 1 ? "" : "s"}
               </p>
             </div>
             <GiftRadar gifts={gifts} />

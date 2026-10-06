@@ -55,11 +55,6 @@ export function roundedPercentage(score: Pick<CategoryScore, "percentage" | "tot
   return Math.round(scorePercentage(score));
 }
 
-export function averagePercentage(scores: CategoryScore[]): number {
-  if (scores.length === 0) return 0;
-  return Math.round(scores.reduce((sum, score) => sum + scorePercentage(score), 0) / scores.length);
-}
-
 export function scoreOnTen(score: CategoryScore): string {
   return (roundedPercentage(score) / 10).toFixed(1);
 }
