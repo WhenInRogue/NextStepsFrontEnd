@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Download } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import CategoryScoresSection from "@/components/tests/CategoryScoresSection";
 import RetakeAssessmentDialog from "@/components/profile/RetakeAssessmentDialog";
@@ -177,8 +178,8 @@ const TestResultPage = () => {
 
   return (
     <Layout>
-      <div className="min-w-0 animate-rise overflow-x-hidden">
-        <p className="mb-6">
+      <div className="min-w-0 animate-rise overflow-x-hidden pb-24 print:overflow-visible print:pb-0">
+        <p className="mb-6 print:hidden">
           <Link to={backTo} className="text-sm text-muted-foreground transition-colors hover:text-ink">
             ← {backLabel}
           </Link>
@@ -195,7 +196,7 @@ const TestResultPage = () => {
 
         <CategoryScoresSection scores={scores} isOwn={isOwn} subjectName={testResult.user?.name} />
 
-        <div className="mt-8">
+        <div className="mt-8 print:hidden">
           <Button asChild className="h-14 w-full rounded-full bg-[var(--color-ink)] text-base text-[var(--color-cream)] hover:opacity-90">
             <Link to={backTo}>{isOwn ? "Return to your profile" : `Back to ${backLabel.toLowerCase()}`}</Link>
           </Button>
@@ -212,6 +213,19 @@ const TestResultPage = () => {
               />
             </p>
           ) : null}
+        </div>
+      </div>
+
+      <div className="pointer-events-none fixed inset-x-0 bottom-5 z-30 print:hidden">
+        <div className="mx-auto flex w-full max-w-6xl justify-end px-5 md:px-8">
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="pointer-events-auto inline-flex h-12 items-center gap-2 rounded-full bg-[var(--color-ink)] px-5 text-sm text-[var(--color-cream)] shadow-lg transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            <Download className="h-4 w-4" aria-hidden />
+            Save as PDF
+          </button>
         </div>
       </div>
     </Layout>

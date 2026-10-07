@@ -31,7 +31,7 @@ const GIFT_BAR_COLORS = [
   "var(--color-azure)",
 ];
 
-const panelClass = "min-w-0 overflow-hidden rounded-3xl bg-card p-6 md:p-8";
+const panelClass = "min-w-0 overflow-hidden rounded-3xl bg-card p-6 print:overflow-visible md:p-8";
 
 const SCRIPTURE_AT_END =
   /^(.*?)\s*(?:[·•]|[–—-])\s*((?:[1-3]\s+)?[A-Z][A-Za-z]+(?:\s+[A-Z][a-z]+)?\s+\d+:\d+(?:\s*[-–]\s*\d+)?)\s*$/;
@@ -59,10 +59,10 @@ const CategoryScoresSection = ({
   const glanceTitle = isOwn ? "Your Gifts at a Glance" : "Gifts at a Glance";
 
   return (
-    <div className="w-full min-w-0 space-y-6 overflow-x-hidden" style={{ contain: "inline-size" }}>
+    <div className="w-full min-w-0 space-y-6 overflow-x-hidden [contain:inline-size] print:overflow-visible print:![contain:none]">
       {gifts.length > 0 ? (
         <div className="grid min-w-0 gap-6 overflow-hidden lg:grid-cols-2">
-          <section className={panelClass}>
+          <section className={cn(panelClass, "print:break-inside-avoid")}>
             <div className="min-w-0">
               <h2 className="font-serif text-xl font-semibold text-ink sm:text-2xl md:text-[1.7rem]">{glanceTitle}</h2>
               <p className="mt-1 font-serif italic text-muted-foreground">
@@ -139,7 +139,7 @@ const CategoryScoresSection = ({
             const presence = giftPresence(score, gifts);
             const { summary, scripture } = splitCategoryCopy(score.category?.description);
             return (
-              <li key={scoreKey(score, index)} className="w-full min-w-0 overflow-hidden rounded-3xl bg-card px-4 py-5 sm:px-5 md:px-6 md:py-6">
+              <li key={scoreKey(score, index)} className="w-full min-w-0 overflow-hidden rounded-3xl bg-card px-4 py-5 print:break-inside-avoid print:overflow-visible sm:px-5 md:px-6 md:py-6">
                 <p className="text-[11px] font-medium uppercase tracking-[0.16em]">
                   <span className="text-ink/55">{name}</span>
                   {presence !== "present" ? (
@@ -250,7 +250,7 @@ function ScoreRow({
   suffix?: string;
 }) {
   return (
-    <li className="min-w-0 space-y-1.5 sm:flex sm:items-center sm:gap-3 sm:space-y-0">
+    <li className="min-w-0 space-y-1.5 print:break-inside-avoid sm:flex sm:items-center sm:gap-3 sm:space-y-0">
       <span className="flex min-w-0 items-center gap-1.5 text-sm text-ink sm:w-[8.5rem] sm:shrink-0">
         {leading ? <Star className="h-3.5 w-3.5 shrink-0 fill-terra text-terra" aria-hidden /> : null}
         <span className="min-w-0 truncate">{name}</span>

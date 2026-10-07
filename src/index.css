@@ -149,3 +149,37 @@
 ::-webkit-scrollbar-thumb {
   @apply rounded-full bg-ink/20 transition-colors hover:bg-ink/40;
 }
+
+@media print {
+  @page {
+    margin: 0.6in;
+  }
+
+  *,
+  *::before,
+  *::after {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  html,
+  body,
+  #root {
+    overflow: visible !important;
+    height: auto !important;
+    background: var(--color-cream) !important;
+  }
+
+  .min-h-screen {
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  .animate-rise,
+  .animate-fade-in,
+  .animate-slide-up {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

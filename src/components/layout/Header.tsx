@@ -50,7 +50,7 @@ const Header = () => {
   const initial = (name || "N").trim().charAt(0).toUpperCase();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-sm">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-sm print:hidden">
       <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto] items-center gap-4 px-5 py-4 md:grid-cols-[1fr_auto_1fr] md:px-8">
         <BrandMark to="/profile" />
 
