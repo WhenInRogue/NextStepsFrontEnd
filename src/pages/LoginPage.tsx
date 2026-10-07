@@ -12,7 +12,6 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [needsVerification, setNeedsVerification] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -20,7 +19,6 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    setNeedsVerification(false);
     try {
       const res = await ApiService.loginUser({ email, password });
       if (res.status === 200) {
@@ -31,24 +29,6 @@ const LoginPage = () => {
       }
     } catch (err: unknown) {
       setError(ApiService.getErrorMessage(err, "Invalid credentials"));
-      setNeedsVerification(ApiService.isUnverifiedEmailError(err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResend = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const res = await ApiService.resendVerification(email.trim());
-      toast({
-        title: "Check your email",
-        description: res.message || "If an account exists for that email, we sent a message with next steps.",
-      });
-      navigate(`/check-email?email=${encodeURIComponent(email.trim())}`);
-    } catch (err: unknown) {
-      setError(ApiService.getErrorMessage(err, "Couldn’t send a verification email"));
     } finally {
       setLoading(false);
     }
@@ -99,12 +79,6 @@ const LoginPage = () => {
         </div>
 
         {error ? <p className="error-banner">{error}</p> : null}
-
-        {needsVerification ? (
-          <Button type="button" variant="outline" className="h-12 w-full text-lg" disabled={loading} onClick={handleResend}>
-            {loading ? "Sending..." : "Resend verification email"}
-          </Button>
-        ) : null}
 
         <Button type="submit" className="h-12 w-full text-lg" disabled={loading}>
           {loading ? "Entering..." : "Enter"}

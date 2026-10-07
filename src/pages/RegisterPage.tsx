@@ -28,12 +28,12 @@ const RegisterPage = () => {
         password,
       };
       if (phoneNumber.trim()) payload.phoneNumber = phoneNumber.trim();
-      const res = await ApiService.registerUser(payload);
+      await ApiService.registerUser(payload);
       toast({
         title: "Account created",
-        description: res.message || "Check your email to verify your account.",
+        description: "You can sign in now.",
       });
-      navigate(`/check-email?email=${encodeURIComponent(email)}`, { state: { registered: true } });
+      navigate("/login");
     } catch (err: unknown) {
       const message = ApiService.getErrorMessage(err, "Error registering user");
       setError(message);
