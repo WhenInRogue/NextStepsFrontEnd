@@ -10,7 +10,8 @@ import type { AnswerPayload } from "@/types/answer";
 import { toUserFacingCopy } from "@/lib/utils";
 
 export default class ApiService {
-  static BASE_URL = "http://localhost:5050/api";
+  static BASE_URL = "https://nextsteps-824283030142.us-central1.run.app/api";
+  //static BASE_URL = "http://localhost:5050/api";
   static ENCRYPTION_KEY = "phegon-dev-inventory";
 
   // Encrypt data using CryptoJS

@@ -127,6 +127,7 @@ const QuestionsSection = ({ test }: { test: Test }) => {
     });
     setFormError("");
     setFormOpen(true);
+    void refreshCategories();
   };
 
   const applyQuestion = (next: Question | null, fallbackCategory?: Category) => {
@@ -147,7 +148,7 @@ const QuestionsSection = ({ test }: { test: Test }) => {
     });
   };
 
-  const buildUpdatePayload = (): QuestionPayload | null => {
+  const buildUpdatePayload = (nextCategoryId: number): QuestionPayload | null => {
     if (!editing) return null;
     const payload: QuestionPayload = {};
     const nextNumber = parseQuestionNumber(form.questionNumber);
@@ -155,6 +156,7 @@ const QuestionsSection = ({ test }: { test: Test }) => {
 
     if (nextNumber != null && nextNumber !== editing.questionNumber) payload.questionNumber = nextNumber;
     if (nextText !== editing.questionText.trim()) payload.questionText = nextText;
+    if (nextCategoryId !== questionCategoryId(editing)) payload.categoryId = nextCategoryId;
 
     return Object.keys(payload).length > 0 ? payload : null;
   };
@@ -181,27 +183,28 @@ const QuestionsSection = ({ test }: { test: Test }) => {
     }
 
     const categoryId = Number(form.categoryId);
-    if (!editing && (!Number.isFinite(categoryId) || categoryId <= 0)) {
-      setFormError("An existing category is required to create a question");
+    if (!Number.isFinite(categoryId) || categoryId <= 0) {
+      setFormError("An existing category is required");
       return;
     }
+
+    const selectedCategory = categories.find((item) => item.categoryId === categoryId);
 
     setSaving(true);
     setFormError("");
 
     try {
       if (editing) {
-        const payload = buildUpdatePayload();
+        const payload = buildUpdatePayload(categoryId);
         if (!payload) {
           toast({ title: "No changes", description: "Nothing to update." });
           setSaving(false);
           return;
         }
         const res = await ApiService.updateQuestion(editing.questionId, payload);
-        applyQuestion(extractQuestion(res), editing.category);
+        applyQuestion(extractQuestion(res), selectedCategory ?? editing.category);
         toast({ title: "Question updated", description: toUserFacingCopy(res.message || "Question updated successfully") });
       } else {
-        const selectedCategory = categories.find((item) => item.categoryId === categoryId);
         const res = await ApiService.createQuestion(test.id, {
           questionNumber,
           questionText,
@@ -236,7 +239,6 @@ const QuestionsSection = ({ test }: { test: Test }) => {
   };
 
   const groupedCategories = groupCategoriesByType(categories);
-  const editingCategory = editing?.category;
   const canCreate = categories.length > 0;
 
   return (
@@ -271,8 +273,8 @@ const QuestionsSection = ({ test }: { test: Test }) => {
             <DialogTitle className="font-serif text-2xl">{editing ? "Edit question" : "New question"}</DialogTitle>
             <DialogDescription>
               {editing
-                ? "You can change the number or wording. The category stays as it was when this question was created."
-                : "Number, text, and a category are required. The category cannot be changed later."}
+                ? "You can change the number, wording, or category."
+                : "Number, text, and a category are required."}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSave} className="space-y-4">
@@ -301,40 +303,28 @@ const QuestionsSection = ({ test }: { test: Test }) => {
                 required
               />
             </div>
-            {editing ? (
-              <div className="rounded-xl bg-sand/70 px-4 py-4">
-                <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Category</p>
-                <p className="mt-1 font-medium text-ink">
-                  {editingCategory?.categoryName || "This category"}
-                </p>
-                {editingCategory ? (
-                  <p className="mt-1 text-sm text-muted-foreground">{formatCategoryType(editingCategory.categoryType)}</p>
-                ) : null}
-              </div>
-            ) : (
-              <div>
-                <label className="field-label">Category</label>
-                <Select value={form.categoryId} onValueChange={(value) => setForm((prev) => ({ ...prev, categoryId: value }))}>
-                  <SelectTrigger className={selectTriggerClass}>
-                    <SelectValue placeholder="Select a gift or team" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {groupedCategories.map((group) =>
-                      group.items.length === 0 ? null : (
-                        <SelectGroup key={group.type}>
-                          <SelectLabel>{group.label}</SelectLabel>
-                          {group.items.map((category) => (
-                            <SelectItem key={category.categoryId} value={String(category.categoryId)}>
-                              {category.categoryName}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      ),
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
+            <div>
+              <label className="field-label">Category</label>
+              <Select value={form.categoryId} onValueChange={(value) => setForm((prev) => ({ ...prev, categoryId: value }))}>
+                <SelectTrigger className={selectTriggerClass}>
+                  <SelectValue placeholder="Select a gift or team" />
+                </SelectTrigger>
+                <SelectContent>
+                  {groupedCategories.map((group) =>
+                    group.items.length === 0 ? null : (
+                      <SelectGroup key={group.type}>
+                        <SelectLabel>{group.label}</SelectLabel>
+                        {group.items.map((category) => (
+                          <SelectItem key={category.categoryId} value={String(category.categoryId)}>
+                            {category.categoryName}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    ),
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
             {formError ? <p className="error-banner">{formError}</p> : null}
             <DialogFooter>
               <Button type="submit" className="w-full sm:w-auto" disabled={saving}>
